@@ -3,6 +3,7 @@ import { app, BrowserWindow, dialog, Menu, nativeImage, shell, session } from 'e
 import { closeDatabase, initDatabase } from './db/client'
 import { handlers } from './ipc/handlers'
 import { getStreamToken, initProviders } from './providers'
+import { initAlerts, shutdownAlerts } from './alerts/engine'
 import { initRealtime, resetSubscriptions, shutdownRealtime } from './realtime'
 import { emitIpcEvent, registerIpcHandlers } from './ipc/register'
 import { initLogger, logger } from './lib/logger'
@@ -229,6 +230,10 @@ if (!gotSingleInstanceLock) {
     // proveedor; ambas existen ya en este punto.
     initRealtime(mainWindow, () => getStreamToken())
 
+    // Después del flujo en vivo: el motor se engancha a sus ticks y se suscribe
+    // a los símbolos vigilados, así que necesita que ya exista.
+    initAlerts(mainWindow)
+
     // Al recargarse el renderer, los paneles anteriores dejan de existir. Sin
     // reiniciar las suscripciones, sus referencias quedarían contadas para
     // siempre y el socket abierto sin nadie escuchando.
@@ -249,6 +254,7 @@ if (!gotSingleInstanceLock) {
   // Cierre limpio: deja el archivo SQLite sin journal pendiente y el socket
   // cerrado en vez de esperar a que el sistema lo corte.
   app.on('will-quit', () => {
+    shutdownAlerts()
     shutdownRealtime()
     void closeDatabase()
   })

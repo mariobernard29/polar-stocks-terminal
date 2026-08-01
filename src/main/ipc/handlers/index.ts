@@ -1,4 +1,5 @@
 import type { IpcHandlers } from '../register'
+import * as alertHandlers from './alerts'
 import * as appHandlers from './app'
 import * as dbHandlers from './db'
 import * as layoutHandlers from './layouts'
@@ -88,4 +89,13 @@ export const handlers: IpcHandlers = {
   'portfolio:dividends': portfolioHandlers.dividends,
   'portfolio:addDividend': portfolioHandlers.addDividend,
   'portfolio:deleteDividend': portfolioHandlers.deleteDividend,
+
+  'alerts:list': alertHandlers.list,
+  'alerts:create': alertHandlers.create,
+  'alerts:setEnabled': alertHandlers.setEnabled,
+  'alerts:delete': alertHandlers.remove,
+  'alerts:triggers': alertHandlers.triggers,
+  'alerts:acknowledge': alertHandlers.acknowledge,
+  'alerts:acknowledgeAll': alertHandlers.acknowledgeAll,
+  'alerts:capabilities': alertHandlers.capabilities,
 }

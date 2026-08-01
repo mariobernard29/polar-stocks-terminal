@@ -49,6 +49,39 @@ export const es = {
       future: 'La fecha no puede estar en el futuro.',
     },
   },
+  alerts: {
+    alreadySatisfied:
+      'La alerta ya está vigilando, pero su condición se cumple ahora mismo (valor actual {{value}}). Solo avisará cuando el valor salga de esa condición y vuelva a entrar.',
+    couldNotCheck:
+      'La alerta se ha guardado. No se pudo consultar el valor actual para comprobar si su condición ya se cumple.',
+    create: 'Nueva alerta',
+    kind: 'Tipo',
+    condition: 'Condición',
+    threshold: 'Umbral',
+    once: 'Una sola vez',
+    repeating: 'Se repite',
+    enabled: 'Activa',
+    empty: 'No hay alertas configuradas.',
+    noTriggers: 'Todavía no se ha disparado ninguna alerta.',
+    markAllRead: 'Marcar todo como leído',
+    lastTriggered: 'Último aviso: {{at}}',
+    kinds: { price: 'Precio', changePercent: 'Variación' },
+    conditions: { above: 'por encima de', below: 'por debajo de' },
+    tabs: { active: 'Alertas', history: 'Avisos' },
+    engineStatus:
+      'Las alertas se comprueban cada {{seconds}} s en segundo plano, aunque esta pantalla esté cerrada.',
+    streamingOn: 'Las de precio además se evalúan al instante con el flujo en vivo.',
+    noDesktopNotifications:
+      'Este sistema no admite notificaciones de escritorio: los avisos solo aparecerán aquí.',
+    cannotEvaluate:
+      'No hay ningún proveedor de cotizaciones configurado, así que las alertas se guardarán pero no se evaluarán. Configura una clave en Configuración → APIs.',
+    limitations:
+      'Solo hay alertas de precio y de variación. Las de volumen no son fiables porque el flujo solo trae el volumen de cada operación suelta, no el acumulado de la sesión; las de noticias e indicadores exigirían sondear continuamente endpoints que el plan gratuito limita o deniega.',
+    errors: {
+      symbol: 'Introduce un símbolo válido, por ejemplo AAPL o BTC.',
+      threshold: 'El umbral debe ser un número.',
+    },
+  },
   nav: {
     dashboard: 'Panel',
     markets: 'Mercados',
@@ -92,7 +125,10 @@ export const es = {
     news: { title: 'Noticias', description: 'Titulares filtrados por activo y categoría.' },
     calendar: { title: 'Calendario', description: 'Resultados, dividendos y datos macro.' },
     screeners: { title: 'Screeners', description: 'Filtros sobre acciones y criptomonedas.' },
-    alerts: { title: 'Alertas', description: 'Avisos de precio, volumen e indicadores.' },
+    alerts: {
+      title: 'Alertas',
+      description: 'Avisos de precio y variación, evaluados en segundo plano.',
+    },
     favorites: { title: 'Favoritos', description: 'Acceso rápido a tus activos habituales.' },
     settings: { title: 'Configuración', description: 'Preferencias, APIs y base de datos.' },
   },
@@ -270,8 +306,7 @@ export const es = {
       secondaryTimezone: 'Zona horaria secundaria',
       secondaryTimezoneHint: 'Segundo reloj de la barra superior. Nueva York por defecto.',
       cacheTtl: 'Caducidad de la caché (segundos)',
-      cacheTtlHint:
-        'Cuánto se reutiliza una respuesta antes de volver a pedirla al proveedor.',
+      cacheTtlHint: 'Cuánto se reutiliza una respuesta antes de volver a pedirla al proveedor.',
     },
     appearance: {
       title: 'Apariencia',
@@ -291,8 +326,7 @@ export const es = {
         'TradingView ofrece indicadores y herramientas de dibujo, pero carga contenido externo. El motor propio usa nuestros datos y funciona sin conexión.',
       accent: 'Acento',
       reduceMotion: 'Reducir el movimiento',
-      reduceMotionHint:
-        'Desactiva las animaciones, además de respetar la preferencia del sistema.',
+      reduceMotionHint: 'Desactiva las animaciones, además de respetar la preferencia del sistema.',
     },
     shortcuts: {
       title: 'Atajos',

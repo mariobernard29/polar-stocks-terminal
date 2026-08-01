@@ -85,6 +85,15 @@ export const IPC_CHANNEL_NAMES = [
   'portfolio:dividends',
   'portfolio:addDividend',
   'portfolio:deleteDividend',
+
+  'alerts:list',
+  'alerts:create',
+  'alerts:setEnabled',
+  'alerts:delete',
+  'alerts:triggers',
+  'alerts:acknowledge',
+  'alerts:acknowledgeAll',
+  'alerts:capabilities',
 ] as const
 
 export type IpcChannelName = (typeof IPC_CHANNEL_NAMES)[number]
@@ -93,6 +102,7 @@ export const IPC_EVENT_NAMES = [
   'window:maximizedChanged',
   'market:ticks',
   'market:streamStatus',
+  'alerts:triggered',
 ] as const
 
 export type IpcEventName = (typeof IPC_EVENT_NAMES)[number]

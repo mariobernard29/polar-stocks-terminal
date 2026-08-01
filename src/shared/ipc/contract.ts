@@ -7,6 +7,9 @@ import {
 } from './channels'
 import { settingsSchema } from '../settings'
 import {
+  alertInputSchema,
+  alertSchema,
+  alertTriggerSchema,
   assetClassSchema,
   calendarEventSchema,
   calendarQuerySchema,
@@ -444,6 +447,65 @@ export const ipcContract = {
     input: z.object({ id: z.string().min(1) }),
     output: z.void(),
   },
+
+  // ─── Alertas ──────────────────────────────────────────────────────────────
+
+  'alerts:list': { input: z.void(), output: z.array(alertSchema) },
+
+  /**
+   * Crea una alerta y dice si su condición **ya se cumplía**.
+   *
+   * Hace falta decirlo porque el motor dispara al cruzar, no al estar: una
+   * alerta de «por encima de 200» creada con el precio ya en 300 queda armada y
+   * en silencio hasta que baje y vuelva a subir. Sin este aviso, el usuario se
+   * queda esperando una notificación que no va a llegar y que además sería
+   * correcta que no llegara.
+   */
+  'alerts:create': {
+    input: alertInputSchema,
+    output: z.object({
+      alert: alertSchema,
+      /** `null` si no se pudo consultar el valor actual. */
+      alreadySatisfied: z.boolean().nullable(),
+      currentValue: z.number().nullable(),
+    }),
+  },
+
+  'alerts:setEnabled': {
+    input: z.object({ id: z.string().min(1), enabled: z.boolean() }),
+    output: alertSchema,
+  },
+
+  'alerts:delete': { input: z.object({ id: z.string().min(1) }), output: z.void() },
+
+  'alerts:triggers': {
+    input: z.object({ limit: z.number().int().min(1).max(200).default(50) }),
+    output: z.array(alertTriggerSchema),
+  },
+
+  'alerts:acknowledge': { input: z.object({ id: z.string().min(1) }), output: z.void() },
+  'alerts:acknowledgeAll': { input: z.void(), output: z.void() },
+
+  /**
+   * Qué puede hacer de verdad el motor de alertas ahora mismo.
+   *
+   * Lo consulta la pantalla para explicar, por ejemplo, que sin proveedor de
+   * cotizaciones configurado las alertas se guardan pero nunca se evaluarán.
+   * Prometer vigilancia que no existe es la peor forma de fallar aquí.
+   */
+  'alerts:capabilities': {
+    input: z.void(),
+    output: z.object({
+      /** Si hay algún proveedor capaz de dar cotizaciones. */
+      canEvaluate: z.boolean(),
+      /** Si el sistema operativo admite notificaciones de escritorio. */
+      canNotify: z.boolean(),
+      /** Cada cuánto se comprueban las alertas, en milisegundos. */
+      pollIntervalMs: z.number().int(),
+      /** Si el flujo en vivo está conectado y acelera los avisos de precio. */
+      streaming: z.boolean(),
+    }),
+  },
   // `satisfies Record<IpcChannelName, …>` es lo que mantiene sincronizados el
   // contrato y la lista de canales sin zod: falta un canal → error; sobra un
   // canal que no está en la lista → error.
@@ -482,6 +544,16 @@ export const ipcEvents = {
 
   /** Estado de la conexión en vivo, para poder indicarlo en la interfaz. */
   'market:streamStatus': streamStatusSchema,
+
+  /**
+   * Una alerta acaba de dispararse.
+   *
+   * Va por push y no por sondeo porque el disparo lo detecta el proceso
+   * principal, que es quien vigila las cotizaciones. Si el renderer tuviera que
+   * preguntar, el aviso llegaría con el retraso del intervalo de sondeo, que es
+   * justo lo que una alerta no puede permitirse.
+   */
+  'alerts:triggered': alertTriggerSchema,
 } as const satisfies Record<IpcEventName, z.ZodType>
 
 export type IpcEvents = typeof ipcEvents

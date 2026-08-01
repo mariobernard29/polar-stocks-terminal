@@ -75,9 +75,12 @@ acciones y uno de cripto.
 - ⬜ Gráficas de evolución del portafolio — requiere el histórico de precios de
   cada posición día a día, que en el plan gratuito de FMP son tantas llamadas
   como símbolos por cada recálculo
-- ⬜ Alertas de precio, volumen, noticias e indicadores
-- ⬜ Notificaciones de escritorio
-- ⬜ Centro de alertas disparadas
+- ✅ Alertas de precio y de variación porcentual, evaluadas en segundo plano
+- ⬜ Alertas de volumen, noticias e indicadores — el flujo solo trae el volumen
+  de cada operación suelta, no el acumulado de la sesión; noticias e indicadores
+  exigirían sondear sin parar endpoints que el plan gratuito limita o deniega
+- ✅ Notificaciones de escritorio
+- ✅ Centro de alertas disparadas
 - ⬜ **Polar AI**: panel de IA multi-proveedor (Anthropic, OpenAI, Gemini),
   configurable por el usuario
 - ⬜ Notas ancladas a activos (el modelo `Note` ya existe)

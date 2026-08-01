@@ -49,6 +49,10 @@ const PortfolioPage = lazy(() =>
   import('../features/portfolio/PortfolioPage').then((m) => ({ default: m.PortfolioPage })),
 )
 
+const AlertsPage = lazy(() =>
+  import('../features/alerts/AlertsPage').then((m) => ({ default: m.AlertsPage })),
+)
+
 const AssetPage = lazy(() =>
   import('../features/asset/AssetPage').then((module) => ({ default: module.AssetPage })),
 )
@@ -60,7 +64,7 @@ const SettingsPage = lazy(() =>
 // El panel principal ya es el espacio de trabajo real; el resto de secciones
 // siguen siendo marcadores hasta la fase que les corresponde.
 const placeholderRoutes: RouteObject[] = NAVIGATION.filter(
-  (item) => item.phase !== null && !['/', '/mercados', '/listas', '/noticias', '/calendario', '/screeners', '/portafolio'].includes(item.path),
+  (item) => item.phase !== null && !['/', '/mercados', '/listas', '/noticias', '/calendario', '/screeners', '/portafolio', '/alertas'].includes(item.path),
 ).map((item) => ({
   path: item.path.slice(1),
   element: (
@@ -86,6 +90,7 @@ export const router = createHashRouter([
       { path: 'calendario', element: <CalendarPage /> },
       { path: 'screeners', element: <ScreenersPage /> },
       { path: 'portafolio', element: <PortfolioPage /> },
+      { path: 'alertas', element: <AlertsPage /> },
       { path: 'activo/:symbol', element: <AssetPage /> },
       { path: 'configuracion', element: <SettingsPage /> },
       // Cualquier ruta desconocida vuelve al panel en lugar de dejar la ventana

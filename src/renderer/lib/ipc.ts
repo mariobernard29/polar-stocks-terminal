@@ -123,6 +123,16 @@ export const ipc = {
       call('portfolio:addDividend', input),
     deleteDividend: (id: string) => call('portfolio:deleteDividend', { id }),
   },
+  alerts: {
+    list: () => call('alerts:list'),
+    create: (input: IpcInput<'alerts:create'>) => call('alerts:create', input),
+    setEnabled: (id: string, enabled: boolean) => call('alerts:setEnabled', { id, enabled }),
+    remove: (id: string) => call('alerts:delete', { id }),
+    triggers: (limit = 50) => call('alerts:triggers', { limit }),
+    acknowledge: (id: string) => call('alerts:acknowledge', { id }),
+    acknowledgeAll: () => call('alerts:acknowledgeAll'),
+    capabilities: () => call('alerts:capabilities'),
+  },
   layouts: {
     list: () => call('layouts:list'),
     get: (id: string) => call('layouts:get', { id }),

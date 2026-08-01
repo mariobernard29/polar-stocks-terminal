@@ -37,6 +37,32 @@ let flushTimer: NodeJS.Timeout | null = null
 let targetWindow: BrowserWindow | null = null
 let lastStatus: StreamStatus = 'closed'
 
+/** Una cotización ya agrupada, tal como sale hacia el renderer. */
+export interface RealtimeTick {
+  readonly symbol: string
+  readonly price: number
+  readonly timestamp: number
+  readonly volume: number | null
+}
+
+/**
+ * Interesados en los ticks dentro del propio proceso principal.
+ *
+ * El motor de alertas necesita ver los precios igual que el renderer, pero
+ * hacerle escuchar por IPC su propio evento sería absurdo. Se les entrega el
+ * lote ya agrupado, no cada operación: para decidir si un precio ha cruzado un
+ * umbral, cuatro comprobaciones por segundo bastan y sobran.
+ */
+type TickListener = (ticks: readonly RealtimeTick[]) => void
+
+const tickListeners = new Set<TickListener>()
+
+/** Registra un oyente local. Devuelve la función para darse de baja. */
+export function onTicks(listener: TickListener): () => void {
+  tickListeners.add(listener)
+  return () => tickListeners.delete(listener)
+}
+
 function flush(): void {
   if (pending.size === 0) return
 
@@ -49,6 +75,16 @@ function flush(): void {
   pending.clear()
 
   emitIpcEvent(targetWindow, 'market:ticks', ticks)
+
+  for (const listener of tickListeners) {
+    // Un oyente que falle no puede dejar sin ticks a los demás ni tumbar el
+    // temporizador, que no volvería a arrancar.
+    try {
+      listener(ticks)
+    } catch (error) {
+      logger.error('[realtime] fallo en un oyente de ticks', error)
+    }
+  }
 }
 
 function startFlushing(): void {

@@ -49,6 +49,39 @@ export const en: TranslationShape = {
       future: 'The date cannot be in the future.',
     },
   },
+  alerts: {
+    alreadySatisfied:
+      'The alert is now watching, but its condition is already met (current value {{value}}). It will only fire once the value leaves that condition and comes back.',
+    couldNotCheck:
+      'The alert was saved. The current value could not be fetched to check whether its condition is already met.',
+    create: 'New alert',
+    kind: 'Type',
+    condition: 'Condition',
+    threshold: 'Threshold',
+    once: 'Once only',
+    repeating: 'Repeats',
+    enabled: 'Enabled',
+    empty: 'No alerts configured.',
+    noTriggers: 'No alert has fired yet.',
+    markAllRead: 'Mark all as read',
+    lastTriggered: 'Last fired: {{at}}',
+    kinds: { price: 'Price', changePercent: 'Change' },
+    conditions: { above: 'above', below: 'below' },
+    tabs: { active: 'Alerts', history: 'Fired' },
+    engineStatus:
+      'Alerts are checked every {{seconds}}s in the background, even with this screen closed.',
+    streamingOn: 'Price alerts are also evaluated instantly from the live stream.',
+    noDesktopNotifications:
+      'This system does not support desktop notifications: alerts will only appear here.',
+    cannotEvaluate:
+      'No quote provider is configured, so alerts will be saved but never evaluated. Add a key in Settings → APIs.',
+    limitations:
+      'Only price and change alerts are offered. Volume alerts would be misleading because the stream carries per-trade volume, not the session total; news and indicator alerts would require continuously polling endpoints that the free tier limits or denies.',
+    errors: {
+      symbol: 'Enter a valid symbol, for example AAPL or BTC.',
+      threshold: 'The threshold must be a number.',
+    },
+  },
   nav: {
     dashboard: 'Dashboard',
     markets: 'Markets',
@@ -92,7 +125,10 @@ export const en: TranslationShape = {
     news: { title: 'News', description: 'Headlines filtered by asset and category.' },
     calendar: { title: 'Calendar', description: 'Earnings, dividends and macro data.' },
     screeners: { title: 'Screeners', description: 'Filters across stocks and crypto.' },
-    alerts: { title: 'Alerts', description: 'Price, volume and indicator alerts.' },
+    alerts: {
+      title: 'Alerts',
+      description: 'Price and change alerts, evaluated in the background.',
+    },
     favorites: { title: 'Favorites', description: 'Quick access to your usual assets.' },
     settings: { title: 'Settings', description: 'Preferences, APIs and database.' },
   },
@@ -323,8 +359,7 @@ export const en: TranslationShape = {
       test: 'Test',
       getKey: 'Get a key',
       capabilitiesTitle: 'Available features',
-      capabilitiesDescription:
-        'What the app can do with the providers configured right now.',
+      capabilitiesDescription: 'What the app can do with the providers configured right now.',
       available: 'Available ({{count}})',
       degraded: 'Degraded ({{count}})',
       unavailable: 'Unavailable ({{count}})',

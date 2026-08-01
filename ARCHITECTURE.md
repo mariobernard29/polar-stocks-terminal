@@ -289,6 +289,39 @@ como cero: eso abultaría la pérdida en silencio.
 
 ---
 
+## Alertas
+
+El motor vive en el proceso principal (`src/main/alerts/engine.ts`), y tiene que
+ser así: una alerta que solo se evaluara con su pantalla abierta no sería una
+alerta.
+
+**Se dispara al cruzar, no al estar.** Es la decisión que hace la función usable.
+Una alerta de «AAPL por encima de 200» no salta en cada tick mientras el precio
+siga en 210: salta en el instante en que pasa de no cumplirse a cumplirse. Sin
+esto, una sola alerta generaría un aviso cada 250 ms.
+
+De ahí se derivan dos consecuencias que la interfaz tiene que contar:
+
+- La primera observación **arma** pero no dispara. Si al crear la alerta su
+  condición ya se cumple, `alerts:create` lo devuelve y la pantalla lo advierte
+  en el único momento en que el usuario puede corregir el umbral.
+- El estado de armado se guarda **en memoria**. Al reiniciar, todas las alertas
+  se rearman con la primera observación, así que no disparan por lo que ocurrió
+  mientras la aplicación estaba cerrada. Notificar al arrancar un cruce de hace
+  tres días sería ruido con apariencia de aviso.
+
+Dos fuentes de datos, por necesidad. El **sondeo** cada 60 s es la vía principal
+y la única que sirve para todo: índices, divisas y materias primas no tienen
+flujo en vivo, y la variación de la sesión no viaja en los ticks —una operación
+suelta no sabe con qué abrió el valor—. Los **ticks** del WebSocket solo cubren
+alertas de precio, pero bajan el aviso de un minuto a menos de un segundo.
+
+El canal `alerts:capabilities` existe para que la pantalla no prometa vigilancia
+que no hay: sin proveedor de cotizaciones configurado, las alertas se guardan
+pero no se evalúan, y eso se dice en rojo.
+
+---
+
 ## Estado en el renderer
 
 Frontera estricta y deliberada:
