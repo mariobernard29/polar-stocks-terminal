@@ -73,6 +73,18 @@ export const IPC_CHANNEL_NAMES = [
   'news:bookmarks',
   'news:toggleBookmark',
   'news:bookmarkedIds',
+
+  'portfolio:list',
+  'portfolio:create',
+  'portfolio:rename',
+  'portfolio:delete',
+  'portfolio:transactions',
+  'portfolio:addTransaction',
+  'portfolio:deleteTransaction',
+  'portfolio:positions',
+  'portfolio:dividends',
+  'portfolio:addDividend',
+  'portfolio:deleteDividend',
 ] as const
 
 export type IpcChannelName = (typeof IPC_CHANNEL_NAMES)[number]

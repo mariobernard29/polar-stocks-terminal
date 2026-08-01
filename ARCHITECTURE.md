@@ -254,6 +254,41 @@ arquitectura, y no en un `if` repartido por la interfaz. La UI pregunta
 
 ---
 
+## Portafolio
+
+Dos decisiones que condicionan todo lo demás:
+
+**Las posiciones no se almacenan.** No hay tabla `Position`: se derivan de las
+transacciones en cada consulta (`derivePositions`, en
+`src/shared/portfolio/positions.ts`). Guardar las dos cosas obligaría a
+mantenerlas sincronizadas en cada alta, baja y corrección, y basta un fallo para
+que el coste medio guardado deje de corresponderse con el historial *sin
+ninguna señal de que ha pasado*. Derivar cuesta más por consulta y no se nota:
+una cartera personal tiene cientos de operaciones, no millones.
+
+**El valor de mercado lo calcula el renderer.** El canal `portfolio:positions`
+devuelve cantidad, coste medio y resultado realizado, pero **ningún precio**. El
+renderer los combina con las cotizaciones que ya tiene en la caché de TanStack
+Query —las mismas que alimenta el WebSocket—, así que la cartera se revaloriza
+con cada tick sin una sola petición adicional. Si el main devolviera el valor ya
+sumado, habría que volver a pedirlo entero cada vez que se moviera un precio.
+
+El método es **coste medio ponderado**, que es el que muestran casi todos los
+brókers minoristas. No es el único válido: FIFO y lote específico dan cifras
+distintas y pueden importar a efectos fiscales. Queda escrito aquí y en el
+módulo porque es el tipo de detalle que, si no se documenta, alguien acaba
+descubriendo al comparar con su bróker.
+
+Las comisiones de compra aumentan el coste base; las de venta reducen los
+ingresos. El módulo tiene 23 pruebas con las cifras esperadas calculadas a mano
+—no derivadas del propio código— porque es la parte del proyecto donde un error
+se traduce en que alguien vea mal cuánto ha ganado.
+
+Cuando falta la cotización de una posición, la pantalla lo dice. No se cuenta
+como cero: eso abultaría la pérdida en silencio.
+
+---
+
 ## Estado en el renderer
 
 Frontera estricta y deliberada:

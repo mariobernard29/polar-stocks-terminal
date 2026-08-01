@@ -70,9 +70,11 @@ acciones y uno de cripto.
 
 ## Fase 4 — Portafolio, alertas y Polar AI ⬜
 
-- ⬜ Portafolio: compras, ventas, dividendos, historial (los modelos ya existen)
-- ⬜ Rentabilidad, coste medio y P&L derivados de las transacciones
-- ⬜ Gráficas de evolución del portafolio
+- ✅ Portafolio: compras, ventas, dividendos, historial (los modelos ya existen)
+- ✅ Rentabilidad, coste medio y P&L derivados de las transacciones
+- ⬜ Gráficas de evolución del portafolio — requiere el histórico de precios de
+  cada posición día a día, que en el plan gratuito de FMP son tantas llamadas
+  como símbolos por cada recálculo
 - ⬜ Alertas de precio, volumen, noticias e indicadores
 - ⬜ Notificaciones de escritorio
 - ⬜ Centro de alertas disparadas

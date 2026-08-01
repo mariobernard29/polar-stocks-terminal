@@ -78,6 +78,31 @@ const COMMANDS = {
     console.log('click', sel, '→', r)
   },
 
+  /**
+   * Rellena un campo: `fill <selector> | <valor>`.
+   *
+   * Hace falta un comando propio porque el `click` de arriba usa `el.click()`
+   * del DOM, que en Chromium **no da el foco** a un input: lo que se escribiera
+   * después con `type` acabaría en el body y el formulario quedaría vacío,
+   * fallando de una forma que parece un error de la aplicación.
+   *
+   * `page.fill` además dispara los eventos que React necesita para enterarse
+   * del cambio en un input controlado.
+   *
+   * El separador es `|` y no el espacio porque los selectores llevan espacios
+   * (`form input[...]`) y los valores también pueden llevarlos.
+   */
+  async fill(...args) {
+    if (!page) return console.log('ERROR: primero "launch"')
+    const [sel, value = ''] = args.join(' ').split('|').map((part) => part.trim())
+    try {
+      await page.fill(sel, value)
+      console.log('fill', sel, '→', JSON.stringify(value))
+    } catch (e) {
+      console.log('ERROR:', e.message.split('\n')[0])
+    }
+  },
+
   async type(text) {
     if (page) await page.keyboard.type(text, { delay: 30 })
   },

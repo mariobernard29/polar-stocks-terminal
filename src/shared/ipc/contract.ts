@@ -14,12 +14,19 @@ import {
   capabilityStatusSchema,
   companyProfileSchema,
   cryptoMetricsSchema,
+  currencySchema,
+  dividendInputSchema,
+  dividendSchema,
   instrumentSchema,
   newsItemSchema,
+  portfolioAccountSchema,
+  positionSchema,
   quoteSchema,
   screenerQuerySchema,
   screenerRowSchema,
   symbolSchema,
+  transactionInputSchema,
+  transactionSchema,
 } from '../domain'
 import {
   historicalQuerySchema,
@@ -372,6 +379,70 @@ export const ipcContract = {
   'market:streamStatus': {
     input: z.void(),
     output: streamStatusSchema,
+  },
+
+  // ─── Portafolio ───────────────────────────────────────────────────────────
+
+  'portfolio:list': { input: z.void(), output: z.array(portfolioAccountSchema) },
+
+  'portfolio:create': {
+    input: z.object({
+      name: z.string().trim().min(1).max(60),
+      currency: currencySchema.default('USD'),
+    }),
+    output: portfolioAccountSchema,
+  },
+
+  'portfolio:rename': {
+    input: z.object({ id: z.string().min(1), name: z.string().trim().min(1).max(60) }),
+    output: portfolioAccountSchema,
+  },
+
+  'portfolio:delete': { input: z.object({ id: z.string().min(1) }), output: z.void() },
+
+  'portfolio:transactions': {
+    input: z.object({
+      portfolioId: z.string().min(1),
+      symbol: symbolSchema.nullable().default(null),
+    }),
+    output: z.array(transactionSchema),
+  },
+
+  'portfolio:addTransaction': {
+    input: transactionInputSchema,
+    output: transactionSchema,
+  },
+
+  'portfolio:deleteTransaction': {
+    input: z.object({ id: z.string().min(1) }),
+    output: z.void(),
+  },
+
+  /**
+   * Posiciones derivadas, **sin precio de mercado**.
+   *
+   * El precio lo pone el renderer con las cotizaciones que ya tiene en caché:
+   * así el valor de la cartera se mueve con los ticks del WebSocket en lugar de
+   * exigir una ronda de peticiones propia cada vez que se abre la pantalla.
+   */
+  'portfolio:positions': {
+    input: z.object({ portfolioId: z.string().min(1) }),
+    output: z.array(positionSchema),
+  },
+
+  'portfolio:dividends': {
+    input: z.object({ portfolioId: z.string().min(1) }),
+    output: z.array(dividendSchema),
+  },
+
+  'portfolio:addDividend': {
+    input: dividendInputSchema,
+    output: dividendSchema,
+  },
+
+  'portfolio:deleteDividend': {
+    input: z.object({ id: z.string().min(1) }),
+    output: z.void(),
   },
   // `satisfies Record<IpcChannelName, …>` es lo que mantiene sincronizados el
   // contrato y la lista de canales sin zod: falta un canal → error; sobra un

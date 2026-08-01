@@ -3,6 +3,7 @@ import * as appHandlers from './app'
 import * as dbHandlers from './db'
 import * as layoutHandlers from './layouts'
 import * as marketHandlers from './market'
+import * as portfolioHandlers from './portfolio'
 import * as providerHandlers from './providers'
 import * as realtimeHandlers from './realtime'
 import * as settingsHandlers from './settings'
@@ -75,4 +76,16 @@ export const handlers: IpcHandlers = {
   'news:bookmarks': workspaceData.listBookmarks,
   'news:toggleBookmark': workspaceData.toggleBookmark,
   'news:bookmarkedIds': workspaceData.bookmarkedIds,
+
+  'portfolio:list': portfolioHandlers.list,
+  'portfolio:create': portfolioHandlers.create,
+  'portfolio:rename': portfolioHandlers.rename,
+  'portfolio:delete': portfolioHandlers.remove,
+  'portfolio:transactions': portfolioHandlers.transactions,
+  'portfolio:addTransaction': portfolioHandlers.addTransaction,
+  'portfolio:deleteTransaction': portfolioHandlers.deleteTransaction,
+  'portfolio:positions': portfolioHandlers.positions,
+  'portfolio:dividends': portfolioHandlers.dividends,
+  'portfolio:addDividend': portfolioHandlers.addDividend,
+  'portfolio:deleteDividend': portfolioHandlers.deleteDividend,
 }

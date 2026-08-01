@@ -107,6 +107,22 @@ export const ipc = {
     list: () => call('favorites:list'),
     toggle: (input: IpcInput<'favorites:toggle'>) => call('favorites:toggle', input),
   },
+  portfolio: {
+    list: () => call('portfolio:list'),
+    create: (name: string, currency: string) => call('portfolio:create', { name, currency }),
+    rename: (id: string, name: string) => call('portfolio:rename', { id, name }),
+    remove: (id: string) => call('portfolio:delete', { id }),
+    positions: (portfolioId: string) => call('portfolio:positions', { portfolioId }),
+    transactions: (portfolioId: string, symbol: string | null = null) =>
+      call('portfolio:transactions', { portfolioId, symbol }),
+    addTransaction: (input: IpcInput<'portfolio:addTransaction'>) =>
+      call('portfolio:addTransaction', input),
+    deleteTransaction: (id: string) => call('portfolio:deleteTransaction', { id }),
+    dividends: (portfolioId: string) => call('portfolio:dividends', { portfolioId }),
+    addDividend: (input: IpcInput<'portfolio:addDividend'>) =>
+      call('portfolio:addDividend', input),
+    deleteDividend: (id: string) => call('portfolio:deleteDividend', { id }),
+  },
   layouts: {
     list: () => call('layouts:list'),
     get: (id: string) => call('layouts:get', { id }),
