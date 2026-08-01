@@ -3,7 +3,7 @@ import { useQueries, useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { TrendingDown, TrendingUp } from 'lucide-react'
-import type { Quote } from '@shared/domain'
+import type { Quote, ScreenerRow } from '@shared/domain'
 import { useRealtimeQuotes } from '../../hooks/use-realtime'
 import { ipc } from '../../lib/ipc'
 import { formatCompact, formatPercent, formatPrice, formatRelative } from '../../lib/format'
@@ -22,13 +22,12 @@ import { cn } from '../../lib/cn'
  */
 
 const INDICES = ['^GSPC', '^IXIC', '^DJI'] as const
-const CRYPTO = ['BTC', 'ETH', 'SOL'] as const
-const MOVERS = ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'AMZN', 'GOOGL', 'META', 'JPM'] as const
 
+const CRYPTO = ['BTC', 'ETH', 'SOL'] as const
 export function DashboardPage(): React.JSX.Element {
   const { t } = useTranslation()
 
-  const allSymbols = useMemo(() => [...INDICES, ...CRYPTO, ...MOVERS], [])
+  const allSymbols = useMemo(() => [...INDICES, ...CRYPTO], [])
   useRealtimeQuotes(allSymbols)
 
   const results = useQueries({
@@ -46,19 +45,26 @@ export function DashboardPage(): React.JSX.Element {
     results[allSymbols.indexOf(symbol as (typeof allSymbols)[number])]?.data
 
   /**
-   * Mayores subidas y bajadas de la muestra.
+   * Mayores subidas y bajadas del **mercado completo**.
    *
-   * Es una muestra fija, no un screener del mercado entero: eso exige un
-   * endpoint de *gainers/losers* que ninguno de los proveedores gratuitos
-   * configurados ofrece. Se dice claramente en el título para no aparentar una
-   * cobertura que no hay.
+   * Antes era una muestra fija de ocho valores porque no había endpoint de
+   * movimientos disponible. Al integrar el screener resultó que FMP sí publica
+   * las mayores subidas y bajadas de toda la sesión en el plan gratuito, así
+   * que el título ya no promete más de lo que hay.
    */
-  const movers = useMemo(() => {
-    const quotes = MOVERS.map(quoteFor).filter((quote): quote is Quote => quote !== undefined)
-    const sorted = [...quotes].sort((a, b) => b.changePercent - a.changePercent)
-    return { gainers: sorted.slice(0, 4), losers: sorted.slice(-4).reverse() }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [results])
+  const gainers = useQuery({
+    queryKey: ['screener', 'stock', 'gainers'],
+    queryFn: () => ipc.market.screener({ assetClass: 'stock', preset: 'gainers', limit: 5 }),
+    staleTime: 60_000,
+    retry: false,
+  })
+
+  const losers = useQuery({
+    queryKey: ['screener', 'stock', 'losers'],
+    queryFn: () => ipc.market.screener({ assetClass: 'stock', preset: 'losers', limit: 5 }),
+    staleTime: 60_000,
+    retry: false,
+  })
 
   const news = useQuery({
     queryKey: ['news', null],
@@ -91,13 +97,13 @@ export function DashboardPage(): React.JSX.Element {
           title={t('dashboard.gainers')}
           icon={TrendingUp}
           tone="positive"
-          quotes={movers.gainers}
+          rows={gainers.data ?? []}
         />
         <MoverList
           title={t('dashboard.losers')}
           icon={TrendingDown}
           tone="negative"
-          quotes={movers.losers}
+          rows={losers.data ?? []}
         />
       </div>
 
@@ -178,12 +184,12 @@ function MoverList({
   title,
   icon: Icon,
   tone,
-  quotes,
+  rows,
 }: {
   title: string
   icon: React.ComponentType<{ className?: string }>
   tone: 'positive' | 'negative'
-  quotes: readonly Quote[]
+  rows: readonly ScreenerRow[]
 }): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
@@ -195,12 +201,12 @@ function MoverList({
         {title}
       </h2>
 
-      {quotes.length === 0 ? (
+      {rows.length === 0 ? (
         <p className="text-xs text-content-muted">{t('common.loading')}</p>
       ) : (
         <table className="w-full text-xs">
           <tbody>
-            {quotes.map((quote) => (
+            {rows.map((quote) => (
               <tr
                 key={quote.symbol}
                 onClick={() => void navigate(`/activo/${encodeURIComponent(quote.symbol)}`)}
@@ -208,7 +214,7 @@ function MoverList({
               >
                 <td className="py-1.5 text-content">{quote.symbol}</td>
                 <td className="py-1.5 text-right tabular text-content-secondary">
-                  {formatPrice(quote.price, quote.currency, i18n.language)}
+                  {formatPrice(quote.price, 'USD', i18n.language, quote.assetClass)}
                 </td>
                 <td className="py-1.5 text-right tabular text-content-muted">
                   {quote.volume !== null ? formatCompact(quote.volume, i18n.language) : '—'}
