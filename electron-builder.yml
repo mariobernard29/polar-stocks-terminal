@@ -1,0 +1,58 @@
+appId: com.polarstocks.terminal
+productName: Polar Stocks Terminal
+copyright: Copyright © 2026 Polar Stocks
+
+directories:
+  output: release
+  buildResources: resources
+
+files:
+  - out/**/*
+  - package.json
+  - '!**/*.map'
+  - '!**/{.eslintcache,.editorconfig,.prettierrc.json}'
+
+# Las migraciones SQL viajan fuera del asar: el migrador del proceso main las lee
+# como archivos en el arranque para poner al día la base de datos del usuario.
+extraResources:
+  - from: prisma/migrations
+    to: migrations
+    filter: ['**/*.sql']
+  # El icono de la ventana se carga en tiempo de ejecución, no solo al empaquetar.
+  - from: resources/icon.png
+    to: icon.png
+
+# libsql llega como binario N-API ya compilado (no requiere node-gyp ni Python),
+# pero un .node no puede cargarse desde dentro del asar: hay que desempaquetarlo.
+asar: true
+asarUnpack:
+  - '**/node_modules/@libsql/**/*'
+  - '**/node_modules/libsql/**/*'
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  artifactName: ${productName}-${version}-${arch}.${ext}
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Polar Stocks Terminal
+
+mac:
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+  category: public.app-category.finance
+
+linux:
+  target:
+    - AppImage
+  category: Office
+
+# El auto-updater se configura en la Fase 5; el bloque se deja documentado.
+publish: null

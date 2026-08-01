@@ -1,0 +1,48 @@
+/**
+ * Ajustes del tema de dockview a los tokens de Polar Stocks Terminal.
+ *
+ * dockview expone su apariencia mediante variables `--dv-*`. Se reasignan a
+ * nuestros tokens en lugar de escribir colores literales: así el espacio de
+ * trabajo hereda automáticamente cualquier cambio de tema, incluida la densidad.
+ */
+.dv-dockview {
+  --dv-background-color: var(--polar-base);
+  --dv-group-view-background-color: var(--polar-base);
+
+  --dv-tabs-and-actions-container-background-color: var(--polar-surface);
+  --dv-activegroup-visiblepanel-tab-background-color: var(--polar-elevated);
+  --dv-activegroup-hiddenpanel-tab-background-color: var(--polar-surface);
+  --dv-inactivegroup-visiblepanel-tab-background-color: var(--polar-surface);
+  --dv-inactivegroup-hiddenpanel-tab-background-color: var(--polar-surface);
+
+  --dv-activegroup-visiblepanel-tab-color: var(--polar-text);
+  --dv-activegroup-hiddenpanel-tab-color: var(--polar-text-muted);
+  --dv-inactivegroup-visiblepanel-tab-color: var(--polar-text-secondary);
+  --dv-inactivegroup-hiddenpanel-tab-color: var(--polar-text-muted);
+
+  --dv-separator-border: var(--polar-border);
+  --dv-paneview-header-border-color: var(--polar-border);
+
+  --dv-drag-over-background-color: var(--polar-accent-muted);
+  --dv-drag-over-border-color: var(--polar-accent);
+
+  --dv-tab-height: 30px;
+  --dv-tabs-container-scrollbar-color: var(--polar-border-strong);
+}
+
+/* Las pestañas usan la tipografía y el tamaño del resto de la aplicación, no
+   los de la librería: si no, el espacio de trabajo parece incrustado. */
+.dv-dockview .dv-default-tab {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+}
+
+.dv-dockview .dv-default-tab-content {
+  padding: 0 0.5rem;
+}
+
+/* El indicador de panel activo es lo que orienta al usuario cuando hay ocho
+   paneles abiertos. */
+.dv-dockview .dv-active-tab {
+  box-shadow: inset 0 2px 0 0 var(--polar-accent);
+}

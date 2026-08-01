@@ -1,0 +1,43 @@
+# Dependencias
+node_modules/
+
+# Artefactos de build
+out/
+dist/
+release/
+*.tsbuildinfo
+
+# Secretos — NUNCA versionar. Solo .env.example se versiona.
+.env
+.env.*
+!.env.example
+
+# Base de datos local (la de producción vive en userData, no aquí)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+prisma/dev.db*
+
+# Cliente generado por Prisma (se regenera con `npm run db:generate`)
+src/main/db/generated/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Sistema operativo / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Capturas del driver de verificación
+.screenshots/
+
+# Caché de herramientas
+.eslintcache
+.vite/
+coverage/

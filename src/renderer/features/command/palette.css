@@ -1,0 +1,88 @@
+/**
+ * Buscador universal.
+ *
+ * cmdk no trae estilos: renderiza el diálogo y los atributos de estado
+ * (`data-selected`, `cmdk-*`) y deja el aspecto al proyecto. Se estiliza aquí y
+ * no con clases sueltas en el JSX porque hace falta llegar a nodos que cmdk
+ * genera por su cuenta, como el overlay.
+ */
+
+[cmdk-overlay] {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgb(0 0 0 / 0.55);
+  backdrop-filter: blur(2px);
+  animation: polar-fade var(--polar-duration-fast) var(--polar-ease);
+}
+
+.polar-palette {
+  position: fixed;
+  /* Ligeramente por encima del centro: es donde cae la mirada, y deja sitio a
+     la lista de resultados sin que el diálogo salte al crecer. */
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 101;
+
+  width: min(40rem, calc(100vw - 4rem));
+  overflow: hidden;
+  border: 1px solid var(--polar-border-strong);
+  border-radius: calc(var(--polar-radius) * 1.5);
+  background: var(--polar-surface);
+  box-shadow:
+    0 24px 64px rgb(0 0 0 / 0.5),
+    0 2px 8px rgb(0 0 0 / 0.3);
+  animation: polar-rise var(--polar-duration-base) var(--polar-ease);
+}
+
+.polar-group [cmdk-group-heading] {
+  padding: 0.5rem 0.75rem 0.25rem;
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--polar-text-muted);
+}
+
+.polar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--polar-radius);
+  font-size: 0.8125rem;
+  color: var(--polar-text-secondary);
+  cursor: pointer;
+  /* El resaltado lo controla `data-selected`, no :hover: el teclado tiene que
+     mandar tanto como el ratón en una herramienta que se opera escribiendo. */
+  transition: background-color var(--polar-duration-fast) var(--polar-ease);
+}
+
+.polar-item[data-selected='true'] {
+  background: var(--polar-accent-muted);
+  color: var(--polar-text);
+}
+
+.polar-item[data-selected='true'] kbd {
+  color: var(--polar-accent);
+}
+
+@keyframes polar-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes polar-rise {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-0.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [cmdk-overlay],
+  .polar-palette {
+    animation: none;
+  }
+}

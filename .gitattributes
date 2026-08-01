@@ -1,0 +1,20 @@
+# Finales de línea normalizados a LF en el repositorio.
+#
+# El proyecto se desarrolla en Windows pero se compila también para macOS y
+# Linux. Sin esto, cada clon en un sistema distinto produciría diferencias en
+# todas las líneas de todos los archivos, y cualquier `git diff` sería ilegible.
+* text=auto eol=lf
+
+# Binarios: nunca tocar.
+*.png binary
+*.ico binary
+*.icns binary
+*.node binary
+*.db binary
+
+# El SVG es texto, pero son archivos generados y enormes: no aportan nada en un
+# diff y solo entorpecen la revisión.
+*.svg -diff
+
+# El lockfile se versiona pero no se revisa a mano.
+package-lock.json -diff linguist-generated

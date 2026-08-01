@@ -1,0 +1,218 @@
+@import 'tailwindcss';
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Tokens de diseño — Polar Stocks Terminal
+   ────────────────────────────────────────────────────────────────────────────
+   Ningún componente usa colores literales. Todo pasa por estos tokens, lo que
+   permite cambiar tema, invertir la semántica alza/baja (convención asiática)
+   o activar modo daltónico sin tocar una sola línea de JSX.
+
+   Los tokens semánticos (--polar-positive / --polar-negative) apuntan a
+   variables intermedias precisamente para poder intercambiarlas en runtime.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: dark;
+
+  /* Superficies: negro profundo escalonado. El escalonado da profundidad sin
+     necesidad de bordes duros ni sombras pesadas. */
+  --polar-base: #08090a;
+  --polar-surface: #0f1113;
+  --polar-elevated: #16191c;
+  --polar-overlay: #1d2125;
+
+  /* Bordes y separadores */
+  --polar-border: #24282d;
+  --polar-border-strong: #333940;
+
+  /* Texto */
+  --polar-text: #e8eaed;
+  --polar-text-secondary: #9aa3ad;
+  --polar-text-muted: #626b75;
+
+  /* Acento: azul eléctrico. Foco, selección, estados activos. */
+  --polar-accent: #2e6bff;
+  --polar-accent-hover: #4a80ff;
+  --polar-accent-muted: #2e6bff26;
+
+  /* Direccionales crudos: NO usar directamente en componentes. */
+  --polar-up: #16c784;
+  --polar-down: #ea3943;
+  --polar-up-muted: #16c78426;
+  --polar-down-muted: #ea394326;
+
+  /* Semánticos: esto es lo que consumen los componentes. Invertir la
+     convención de color = reasignar estas cuatro variables. */
+  --polar-positive: var(--polar-up);
+  --polar-negative: var(--polar-down);
+  --polar-positive-muted: var(--polar-up-muted);
+  --polar-negative-muted: var(--polar-down-muted);
+
+  /* Estados */
+  --polar-warning: #f0a020;
+  --polar-info: #3a9fd8;
+  --polar-neutral: #6b7480;
+
+  /* Densidad: "comfortable" por defecto, como se pidió (mucho espacio).
+     "compact" existe porque quien vive en una terminal acaba queriendo más
+     filas por pantalla. */
+  --polar-density-row: 2.25rem;
+  --polar-density-gap: 1rem;
+  --polar-density-pad: 1rem;
+
+  /* Movimiento: sutil y rápido. */
+  --polar-duration-fast: 120ms;
+  --polar-duration-base: 160ms;
+  --polar-duration-slow: 220ms;
+  --polar-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --polar-radius: 0.5rem;
+}
+
+/* Convención invertida (verde = baja, rojo = alza), usada en mercados asiáticos. */
+:root[data-market-colors='inverted'] {
+  --polar-positive: var(--polar-down);
+  --polar-negative: var(--polar-up);
+  --polar-positive-muted: var(--polar-down-muted);
+  --polar-negative-muted: var(--polar-up-muted);
+}
+
+/* Modo daltónico: azul/naranja en lugar de verde/rojo. */
+:root[data-market-colors='colorblind'] {
+  --polar-positive: #3a9fd8;
+  --polar-negative: #f0862a;
+  --polar-positive-muted: #3a9fd826;
+  --polar-negative-muted: #f0862a26;
+}
+
+:root[data-density='compact'] {
+  --polar-density-row: 1.75rem;
+  --polar-density-gap: 0.5rem;
+  --polar-density-pad: 0.625rem;
+}
+
+@theme inline {
+  --color-base: var(--polar-base);
+  --color-surface: var(--polar-surface);
+  --color-elevated: var(--polar-elevated);
+  --color-overlay: var(--polar-overlay);
+
+  --color-edge: var(--polar-border);
+  --color-edge-strong: var(--polar-border-strong);
+
+  --color-content: var(--polar-text);
+  --color-content-secondary: var(--polar-text-secondary);
+  --color-content-muted: var(--polar-text-muted);
+
+  --color-accent: var(--polar-accent);
+  --color-accent-hover: var(--polar-accent-hover);
+  --color-accent-muted: var(--polar-accent-muted);
+
+  --color-positive: var(--polar-positive);
+  --color-negative: var(--polar-negative);
+  --color-positive-muted: var(--polar-positive-muted);
+  --color-negative-muted: var(--polar-negative-muted);
+
+  --color-warning: var(--polar-warning);
+  --color-info: var(--polar-info);
+  --color-neutral: var(--polar-neutral);
+
+  --radius-panel: var(--polar-radius);
+
+  --font-sans:
+    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:
+    'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, monospace;
+}
+
+@layer base {
+  * {
+    border-color: var(--polar-border);
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--polar-base);
+    color: var(--polar-text);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* Una terminal de escritorio no se selecciona ni se arrastra como una web. */
+    user-select: none;
+    overflow: hidden;
+  }
+
+  /* El foco visible es obligatorio: la app entera debe poder operarse con teclado. */
+  :focus-visible {
+    outline: 2px solid var(--polar-accent);
+    outline-offset: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--polar-border-strong);
+    border: 2px solid transparent;
+    background-clip: content-box;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--polar-text-muted);
+    background-clip: content-box;
+  }
+
+  /* Se respeta la preferencia del sistema y, además, la de la aplicación:
+     un usuario puede querer reducir el movimiento solo aquí. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  :root[data-reduce-motion='true'] *,
+  :root[data-reduce-motion='true'] *::before,
+  :root[data-reduce-motion='true'] *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer utilities {
+  /* Sin cifras tabulares las columnas de precios bailan en cada tick. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  .text-selectable {
+    user-select: text;
+  }
+
+  /* Zona de arrastre de la ventana sin marco. */
+  .drag-region {
+    -webkit-app-region: drag;
+  }
+  .no-drag {
+    -webkit-app-region: no-drag;
+  }
+}

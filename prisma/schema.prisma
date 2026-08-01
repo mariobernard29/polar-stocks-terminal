@@ -1,0 +1,326 @@
+// ────────────────────────────────────────────────────────────────────────────
+// Polar Stocks Terminal — esquema de la base de datos local
+// ────────────────────────────────────────────────────────────────────────────
+//
+// SQLite por defecto, en la carpeta de datos del usuario (no dentro del bundle:
+// si viviera en el bundle, cada actualización borraría los datos).
+//
+// Los modelos de Portafolio y Alertas existen desde la Fase 1 aunque su interfaz
+// llegue en la Fase 4. Cambiar un esquema con datos reales encima es lo más caro
+// de este proyecto; modelarlos hoy cuesta minutos.
+//
+// Convenciones:
+//   - `id` es cuid, no autoincremental: permite crear registros en el cliente
+//     sin ida y vuelta a la base, y no filtra cuántos registros hay.
+//   - Fechas en DateTime (UTC). Los epoch ms solo se usan en el transporte IPC.
+//   - Importes monetarios en Decimal; cantidades en Float (hay fracciones de
+//     acción y de cripto).
+//   - `onDelete: Cascade` allí donde el hijo no tiene sentido sin el padre.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/main/db/generated"
+}
+
+// En Prisma 7 la URL ya no vive aquí: está en `prisma.config.ts`, y solo la usa
+// el CLI en desarrollo. En tiempo de ejecución la conexión la aporta el driver
+// adapter, apuntando a la carpeta de datos del usuario.
+datasource db {
+  provider = "sqlite"
+}
+
+// ─── Configuración y credenciales ───────────────────────────────────────────
+
+/// Ajustes de la aplicación en formato clave/valor.
+/// Se guarda JSON serializado para no migrar el esquema cada vez que se añade
+/// una preferencia; las preferencias no se consultan por sus campos.
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
+}
+
+/// Credencial de un proveedor de datos.
+///
+/// `secret` guarda el resultado de `safeStorage.encryptString` (cifrado por el
+/// llavero del sistema operativo), NUNCA la clave en claro. La aplicación jamás
+/// escribe una API key sin cifrar en disco ni la envía al renderer.
+model ApiCredential {
+  id       String @id @default(cuid())
+  /// Identificador del proveedor: "finnhub", "polygon", "fmp"…
+  provider String @unique
+
+  /// Blob cifrado por safeStorage. Nulo mientras el usuario no la introduzca.
+  secret Bytes?
+
+  /// El usuario puede desactivar un proveedor sin borrar su clave.
+  enabled Boolean @default(true)
+
+  /// Orden de preferencia al resolver una capacidad. Menor = se intenta antes.
+  priority Int @default(100)
+
+  /// Resultado de la última comprobación, para mostrarlo en Configuración.
+  lastCheckedAt DateTime?
+  lastCheckOk   Boolean?
+  lastCheckNote String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([enabled, priority])
+  @@map("api_credentials")
+}
+
+// ─── Espacio de trabajo: layouts y paneles ──────────────────────────────────
+
+/// Disposición de paneles guardada por el usuario.
+model Layout {
+  id        String   @id @default(cuid())
+  name      String
+  /// Serialización de dockview. Es un formato opaco para nosotros: se guarda
+  /// tal cual y se le devuelve tal cual a la librería.
+  state     String
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name])
+  @@index([isDefault])
+  @@map("layouts")
+}
+
+// ─── Listas de seguimiento ──────────────────────────────────────────────────
+
+model Watchlist {
+  id       String  @id @default(cuid())
+  name     String
+  /// Color de la lista en la interfaz (hex). Opcional.
+  color    String?
+  /// Orden manual definido por el usuario arrastrando.
+  position Int     @default(0)
+
+  items WatchlistItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([position])
+  @@map("watchlists")
+}
+
+model WatchlistItem {
+  id          String    @id @default(cuid())
+  watchlistId String
+  watchlist   Watchlist @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
+
+  /// Símbolo en la forma canónica de la aplicación.
+  symbol     String
+  assetClass String
+  /// Nota libre del usuario sobre por qué sigue este activo.
+  note       String?
+  color      String?
+  position   Int     @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@unique([watchlistId, symbol])
+  @@index([watchlistId, position])
+  @@map("watchlist_items")
+}
+
+/// Favoritos: acceso rápido, independiente de las watchlists.
+model Favorite {
+  id         String   @id @default(cuid())
+  symbol     String   @unique
+  assetClass String
+  position   Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@index([position])
+  @@map("favorites")
+}
+
+// ─── Portafolio (interfaz en Fase 4) ────────────────────────────────────────
+
+model Portfolio {
+  id       String  @id @default(cuid())
+  name     String
+  /// Moneda base para calcular rentabilidad agregada (ISO 4217).
+  currency String  @default("USD")
+  isActive Boolean @default(true)
+
+  transactions Transaction[]
+  dividends    Dividend[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("portfolios")
+}
+
+/// Movimiento del portafolio.
+///
+/// Las posiciones NO se almacenan: se derivan de las transacciones. Guardar
+/// ambas cosas invita a que se desincronicen, y el histórico de movimientos es
+/// la única fuente de verdad para calcular coste medio y P&L.
+model Transaction {
+  id          String    @id @default(cuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  symbol     String
+  assetClass String
+  /// "buy" | "sell"
+  side       String
+
+  quantity     Float
+  pricePerUnit Decimal
+  /// Comisiones e impuestos, en la moneda de la operación.
+  fees         Decimal  @default(0)
+  currency     String   @default("USD")
+
+  executedAt DateTime
+  note       String?
+
+  createdAt DateTime @default(now())
+
+  @@index([portfolioId, symbol])
+  @@index([portfolioId, executedAt])
+  @@map("transactions")
+}
+
+model Dividend {
+  id          String    @id @default(cuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  symbol      String
+  amount      Decimal
+  currency    String   @default("USD")
+  /// Retención fiscal aplicada en origen.
+  withholding Decimal  @default(0)
+  paidAt      DateTime
+
+  createdAt DateTime @default(now())
+
+  @@index([portfolioId, paidAt])
+  @@map("dividends")
+}
+
+// ─── Alertas (interfaz en Fase 4) ───────────────────────────────────────────
+
+model Alert {
+  id         String @id @default(cuid())
+  symbol     String
+  assetClass String
+
+  /// "price" | "volume" | "news" | "indicator"
+  kind      String
+  /// "above" | "below" | "crosses" | "changePercent"
+  condition String
+  /// Umbral. Nulo para alertas que no comparan contra un número (noticias).
+  threshold Decimal?
+  /// Parámetros extra en JSON (indicador, periodo, marco temporal…).
+  params    String?
+
+  enabled Boolean @default(true)
+  /// Si se desactiva sola tras dispararse una vez.
+  once    Boolean @default(true)
+
+  triggers AlertTrigger[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([enabled, symbol])
+  @@map("alerts")
+}
+
+model AlertTrigger {
+  id      String @id @default(cuid())
+  alertId String
+  alert   Alert  @relation(fields: [alertId], references: [id], onDelete: Cascade)
+
+  /// Valor observado que provocó el disparo.
+  value       Decimal?
+  message     String
+  triggeredAt DateTime @default(now())
+  /// Si el usuario ya lo vio en el centro de notificaciones.
+  acknowledged Boolean @default(false)
+
+  @@index([alertId, triggeredAt])
+  @@index([acknowledged])
+  @@map("alert_triggers")
+}
+
+// ─── Contenido guardado por el usuario ──────────────────────────────────────
+
+model NewsBookmark {
+  id          String   @id @default(cuid())
+  /// Id determinista de la noticia (derivado de la URL). Ver domain/news.ts.
+  newsId      String   @unique
+  headline    String
+  url         String
+  source      String
+  publishedAt DateTime
+  /// Símbolos relacionados, JSON serializado.
+  symbols     String   @default("[]")
+
+  createdAt DateTime @default(now())
+
+  @@index([publishedAt])
+  @@map("news_bookmarks")
+}
+
+/// Nota libre del usuario, anclada opcionalmente a un símbolo.
+model Note {
+  id      String  @id @default(cuid())
+  symbol  String?
+  title   String
+  body    String
+  pinned  Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([symbol])
+  @@index([pinned])
+  @@map("notes")
+}
+
+/// Historial del buscador universal, para ordenar sugerencias por uso real.
+model SearchHistory {
+  id         String   @id @default(cuid())
+  query      String
+  symbol     String?
+  /// Cuántas veces se ha usado: alimenta el ranking del buscador.
+  useCount   Int      @default(1)
+  lastUsedAt DateTime @default(now())
+
+  @@unique([query])
+  @@index([lastUsedAt])
+  @@map("search_history")
+}
+
+// ─── Caché persistente ──────────────────────────────────────────────────────
+
+/// Caché en disco para respuestas frías (perfiles, históricos, fundamentales).
+///
+/// Sobrevive a los reinicios, que es lo que permite arrancar rápido y mostrar
+/// algo útil sin conexión. El caché caliente (cotizaciones) vive en memoria.
+model CacheEntry {
+  /// Clave canónica: "quote:AAPL", "profile:MSFT", "candles:BTC:1D"…
+  key       String   @id
+  /// Respuesta ya normalizada al dominio de la app, en JSON.
+  value     String
+  /// Proveedor que sirvió el dato, para poder invalidar por proveedor.
+  provider  String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([expiresAt])
+  @@index([provider])
+  @@map("cache_entries")
+}
