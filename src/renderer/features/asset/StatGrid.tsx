@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { PolarError } from '@shared/ipc/errors'
+import { PolarError } from '@shared/ipc/error-codes'
 
 export interface Stat {
   readonly label: string

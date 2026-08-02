@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query'
-import { PolarError } from '@shared/ipc/errors'
+import { PolarError } from '@shared/ipc/error-codes'
 
 /**
  * Cliente de TanStack Query.

@@ -1,6 +1,5 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { defaultSettings } from '@shared/settings'
 import { App } from './App'
 import { initI18n, type Language } from './i18n'
 import { ipc } from './lib/ipc'
@@ -26,11 +25,22 @@ async function bootstrap(): Promise<void> {
 
   const queryClient = createQueryClient()
 
-  const settings = await ipc.settings.getAll().catch(() => defaultSettings())
+  performance.mark('boot:inicio')
+
+  // Los valores por defecto se cargan solo si la lectura falla. Importarlos de
+  // oficio arrastraría el catálogo de ajustes —y con él zod— al trozo de
+  // arranque, para una vía que casi nunca se recorre.
+  const settings = await ipc.settings
+    .getAll()
+    .catch(async () => (await import('@shared/settings-defaults')).defaultSettings())
   queryClient.setQueryData(SETTINGS_QUERY_KEY, settings)
+
+  performance.mark('boot:ajustes')
 
   const language = settings['general.language'] as Language
   await initI18n(language)
+
+  performance.mark('boot:i18n')
   document.documentElement.lang = language
   document.documentElement.dataset['density'] = settings['appearance.density']
   document.documentElement.dataset['marketColors'] = settings['appearance.marketColors']
@@ -40,6 +50,8 @@ async function bootstrap(): Promise<void> {
       <App queryClient={queryClient} />
     </StrictMode>,
   )
+
+  performance.mark('boot:render')
 }
 
 void bootstrap()

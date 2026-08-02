@@ -105,9 +105,14 @@ configuradas y el contexto de la aplicación. Nunca inventa cifras.
 
 ## Fase 5 — Optimización y distribución ⬜
 
-- ⬜ Revisión del tamaño del bundle del renderer
-- ⬜ Virtualización de tablas largas
-- ⬜ Perfilado de repintados con muchos paneles abiertos
+- ✅ Revisión del tamaño del bundle del renderer — el trozo de arranque baja de
+  1.395 a 1.260 kB sacando zod del renderer. El efecto en el tiempo de arranque
+  fue de ~20 ms sobre ~1.100: dentro del ruido. Se conserva por ser la frontera
+  correcta, no por velocidad
+- ⬜ Virtualización de tablas largas — **no procede todavía**: las listas más
+  largas son de 40-51 filas y se pintan en una fracción de fotograma. Merecerá la
+  pena a partir de unas 500 filas
+- ✅ Medición del arranque, con marcas permanentes en la línea de tiempo
 - ⬜ Actualizador automático con `electron-updater`
 - ⬜ Instaladores para Windows, macOS y Linux
 - ⬜ Firma de código

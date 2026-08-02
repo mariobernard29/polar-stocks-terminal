@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle, Database, Send, Square } from 'lucide-react'
-import { PolarError } from '@shared/ipc/errors'
+import { PolarError } from '@shared/ipc/error-codes'
 import { ipc, on } from '../../lib/ipc'
 
 /**

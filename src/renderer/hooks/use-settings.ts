@@ -1,7 +1,9 @@
 import { useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { Settings } from '@shared/settings'
-import { defaultSettings } from '@shared/settings'
+// Desde el módulo sin zod: este hook está en el camino de arranque y el
+// catálogo de esquemas no debe viajar con él.
+import { defaultSettings } from '@shared/settings-defaults'
 import { changeLanguage, type Language } from '../i18n'
 import { ipc } from '../lib/ipc'
 

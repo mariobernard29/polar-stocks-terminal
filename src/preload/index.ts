@@ -5,7 +5,7 @@ import {
   IPC_EVENT_NAMES,
 } from '@shared/ipc/channels'
 import type { PolarApi } from '@shared/ipc/api'
-import type { IpcResult } from '@shared/ipc/errors'
+import type { IpcResult } from '@shared/ipc/error-codes'
 
 /**
  * Único puente entre el renderer y el proceso main.

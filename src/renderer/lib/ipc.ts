@@ -6,7 +6,7 @@ import type {
   IpcInput,
   IpcOutput,
 } from '@shared/ipc/contract'
-import { PolarError } from '@shared/ipc/errors'
+import { PolarError } from '@shared/ipc/error-codes'
 
 /**
  * Cliente IPC del renderer.

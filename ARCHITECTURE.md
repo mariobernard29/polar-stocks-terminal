@@ -359,6 +359,49 @@ y sin cruzar nunca el IPC. El renderer envía un texto y recibe otro.
 
 ---
 
+## Rendimiento: lo que se midió y lo que no hizo falta
+
+Esta sección existe porque tres de las cuatro optimizaciones previstas resultaron
+innecesarias al medirlas, y esa información vale más que el código que se habría
+escrito.
+
+**Arranque.** Hasta el primer contenido en pantalla pasan ~1,1 s (mediana de
+cinco arranques en caliente; el primero, en frío, ronda 1,5 s). El desglose:
+
+| Fase | Coste |
+|---|---|
+| Cargar y evaluar el trozo inicial | ~320 ms |
+| Leer los ajustes (IPC + SQLite) | 15–30 ms |
+| Iniciar i18n | ~4 ms |
+| Montar React y pintar | ~740 ms |
+
+Dos cosas que parecían candidatas y no lo eran. La lectura de ajustes bloquea el
+primer render a propósito —para no enseñar la interfaz en un idioma y saltar a
+otro— y cuesta menos de 30 ms, así que no hay nada que ganar ahí. Y sacar zod del
+trozo de arranque, que lo adelgaza 135 kB, movió la mediana de 1112 ms a 1092 ms:
+dentro del ruido. **El arranque no está limitado por analizar JavaScript.** El
+cambio se conservó igualmente, pero por ser la frontera correcta —valida quien
+recibe datos de fuera, y eso es el proceso principal—, no por velocidad.
+
+También se probó a retrasar la carga del espacio de trabajo hasta después del
+primer pintado, por si los 611 kB de dockview ocupaban el hilo principal. No
+cambió nada medible y se revirtió: dejar el código habría significado sostener un
+comentario que promete un beneficio inexistente.
+
+**Virtualización de tablas: no procede todavía.** Las listas más largas que la
+aplicación produce hoy son 40 filas en el screener y 51 titulares en noticias,
+con ~800 nodos en todo el documento. Se pintan en una fracción de fotograma.
+Meter una librería de virtualización aquí sería añadir una dependencia y romper
+la selección de texto y el `Ctrl+F` del navegador a cambio de nada. Merecerá la
+pena a partir de unas 500 filas, que es cuando aparecerían filtros libres de
+screener o un histórico de operaciones grande.
+
+**Marcas de arranque.** `main.tsx` deja marcas `boot:*` en la línea de tiempo de
+rendimiento. Cuestan microsegundos y evitan tener que volver a instrumentar a
+mano la próxima vez que alguien sospeche del arranque.
+
+---
+
 ## Estado en el renderer
 
 Frontera estricta y deliberada:

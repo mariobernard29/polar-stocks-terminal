@@ -1,9 +1,9 @@
 import {
+  SETTING_KEYS,
   defaultSettings,
-  settingsCatalog,
+  settingSchemas,
   type SettingKey,
   type Settings,
-  type SettingValue,
 } from '@shared/settings'
 import { getPrisma } from '../client'
 import { logger } from '../../lib/logger'
@@ -29,12 +29,12 @@ export async function getAllSettings(): Promise<Settings> {
   const stored = new Map(rows.map((row) => [row.key, row.value]))
   const result = defaultSettings()
 
-  for (const key of Object.keys(settingsCatalog) as SettingKey[]) {
+  for (const key of SETTING_KEYS) {
     const raw = stored.get(key)
     if (raw === undefined) continue
 
     try {
-      const parsed = settingsCatalog[key].schema.safeParse(JSON.parse(raw))
+      const parsed = settingSchemas[key].safeParse(JSON.parse(raw))
       if (parsed.success) {
         result[key] = parsed.data as never
       } else {
@@ -51,9 +51,9 @@ export async function getAllSettings(): Promise<Settings> {
 /** Escribe un ajuste. El valor se valida contra el catálogo antes de guardarlo. */
 export async function setSetting<K extends SettingKey>(
   key: K,
-  value: SettingValue<K>,
+  value: Settings[K],
 ): Promise<void> {
-  const parsed = settingsCatalog[key].schema.safeParse(value)
+  const parsed = settingSchemas[key].safeParse(value)
   if (!parsed.success) {
     throw new Error(`Valor inválido para el ajuste "${key}"`)
   }
