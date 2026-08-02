@@ -10,6 +10,7 @@ import {
   Wallet,
   ListChecks,
   type LucideIcon,
+  Sparkles,
 } from 'lucide-react'
 
 /**
@@ -32,14 +33,57 @@ export interface NavigationItem {
 }
 
 export const NAVIGATION: readonly NavigationItem[] = [
-  { id: 'dashboard', path: '/', labelKey: 'dashboard', icon: LayoutDashboard, shortcut: 'Ctrl+Shift+D', phase: 'phase2' },
-  { id: 'markets', path: '/mercados', labelKey: 'markets', icon: LineChart, shortcut: 'Ctrl+1', phase: 'phase2' },
+  {
+    id: 'dashboard',
+    path: '/',
+    labelKey: 'dashboard',
+    icon: LayoutDashboard,
+    shortcut: 'Ctrl+Shift+D',
+    phase: 'phase2',
+  },
+  {
+    id: 'markets',
+    path: '/mercados',
+    labelKey: 'markets',
+    icon: LineChart,
+    shortcut: 'Ctrl+1',
+    phase: 'phase2',
+  },
   { id: 'watchlists', path: '/listas', labelKey: 'watchlists', icon: ListChecks, phase: 'phase2' },
-  { id: 'news', path: '/noticias', labelKey: 'news', icon: Newspaper, shortcut: 'Ctrl+2', phase: 'phase3' },
-  { id: 'calendar', path: '/calendario', labelKey: 'calendar', icon: CalendarDays, shortcut: 'Ctrl+3', phase: 'phase3' },
+  {
+    id: 'news',
+    path: '/noticias',
+    labelKey: 'news',
+    icon: Newspaper,
+    shortcut: 'Ctrl+2',
+    phase: 'phase3',
+  },
+  {
+    id: 'calendar',
+    path: '/calendario',
+    labelKey: 'calendar',
+    icon: CalendarDays,
+    shortcut: 'Ctrl+3',
+    phase: 'phase3',
+  },
   { id: 'screeners', path: '/screeners', labelKey: 'screeners', icon: Filter, phase: 'phase3' },
-  { id: 'portfolio', path: '/portafolio', labelKey: 'portfolio', icon: Wallet, shortcut: 'Ctrl+4', phase: 'phase4' },
+  {
+    id: 'portfolio',
+    path: '/portafolio',
+    labelKey: 'portfolio',
+    icon: Wallet,
+    shortcut: 'Ctrl+4',
+    phase: 'phase4',
+  },
   { id: 'alerts', path: '/alertas', labelKey: 'alerts', icon: Bell, phase: 'phase4' },
   { id: 'favorites', path: '/favoritos', labelKey: 'favorites', icon: Star, phase: 'phase2' },
-  { id: 'settings', path: '/configuracion', labelKey: 'settings', icon: Settings, shortcut: 'Ctrl+5', phase: null },
+  { id: 'ai', path: '/polar-ai', labelKey: 'ai', icon: Sparkles, phase: 'phase4' },
+  {
+    id: 'settings',
+    path: '/configuracion',
+    labelKey: 'settings',
+    icon: Settings,
+    shortcut: 'Ctrl+5',
+    phase: null,
+  },
 ]

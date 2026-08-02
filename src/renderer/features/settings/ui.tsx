@@ -21,9 +21,7 @@ export function Section({
     <section className="flex flex-col gap-5 rounded-panel border border-edge bg-surface p-6">
       <div className="flex flex-col gap-1">
         <h2 className="text-sm font-medium text-content">{title}</h2>
-        {description && (
-          <p className="text-xs leading-relaxed text-content-muted">{description}</p>
-        )}
+        {description && <p className="text-xs leading-relaxed text-content-muted">{description}</p>}
       </div>
       <div className="flex flex-col gap-5">{children}</div>
     </section>
@@ -166,7 +164,7 @@ export function ReadOnlyRow({
       <span className="shrink-0 text-xs text-content-muted">{label}</span>
       <span
         className={cn(
-          'truncate text-right text-xs text-content-secondary text-selectable',
+          'text-selectable truncate text-right text-xs text-content-secondary',
           mono && 'tabular',
         )}
         title={value}

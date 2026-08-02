@@ -44,8 +44,7 @@ export function useLayouts(): LayoutsController {
   }, [queryClient])
 
   const saveMutation = useMutation({
-    mutationFn: ({ name, state }: { name: string; state: string }) =>
-      ipc.layouts.save(name, state),
+    mutationFn: ({ name, state }: { name: string; state: string }) => ipc.layouts.save(name, state),
     onSuccess: invalidate,
   })
 

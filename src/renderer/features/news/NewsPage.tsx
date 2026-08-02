@@ -18,13 +18,7 @@ const BOOKMARKS_KEY = ['news', 'bookmarks'] as const
  * tienen un proveedor detrás — ofrecer un filtro que no filtra sería peor que
  * no ofrecerlo.
  */
-const CATEGORIES: readonly (NewsCategory | null)[] = [
-  null,
-  'economy',
-  'technology',
-  'ai',
-  'crypto',
-]
+const CATEGORIES: readonly (NewsCategory | null)[] = [null, 'economy', 'technology', 'ai', 'crypto']
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
@@ -141,7 +135,9 @@ export function NewsPage(): React.JSX.Element {
         </div>
       </header>
 
-      {isLoading && <p className="py-10 text-center text-sm text-content-muted">{t('common.loading')}</p>}
+      {isLoading && (
+        <p className="py-10 text-center text-sm text-content-muted">{t('common.loading')}</p>
+      )}
 
       {!isLoading && items.length === 0 && (
         <p className="rounded-panel border border-edge bg-surface p-10 text-center text-sm text-content-muted">
@@ -191,7 +187,7 @@ export function NewsPage(): React.JSX.Element {
                 'mt-0.5 shrink-0 transition-colors',
                 savedSet.has(item.id)
                   ? 'text-accent'
-                  : 'text-content-muted opacity-0 hover:text-content group-hover:opacity-100',
+                  : 'text-content-muted opacity-0 group-hover:opacity-100 hover:text-content',
               )}
             >
               {savedSet.has(item.id) ? (

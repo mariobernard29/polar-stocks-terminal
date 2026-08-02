@@ -122,9 +122,7 @@ export function PortfolioPage(): React.JSX.Element {
           portfolioId={active.id}
           onSubmit={(input) => addTransaction.mutate(input)}
           isPending={addTransaction.isPending}
-          error={
-            addTransaction.error instanceof PolarError ? addTransaction.error.message : null
-          }
+          error={addTransaction.error instanceof PolarError ? addTransaction.error.message : null}
         />
       )}
 
@@ -178,7 +176,7 @@ function Metric({
 }): React.JSX.Element {
   return (
     <div className="flex flex-col gap-1 rounded-panel border border-edge bg-surface p-4">
-      <span className="text-[10px] uppercase tracking-wide text-content-muted">{label}</span>
+      <span className="text-[10px] tracking-wide text-content-muted uppercase">{label}</span>
       <span
         className={cn(
           'tabular text-lg font-medium',
@@ -232,27 +230,27 @@ function PositionsTable({
             className="cursor-pointer border-t border-edge transition-colors hover:bg-elevated"
           >
             <td className="px-4 py-2 text-content">{position.symbol}</td>
-            <td className="px-2 py-2 text-right tabular text-content-secondary">
+            <td className="tabular px-2 py-2 text-right text-content-secondary">
               {position.quantity.toLocaleString(i18n.language, { maximumFractionDigits: 8 })}
             </td>
-            <td className="px-2 py-2 text-right tabular text-content-secondary">
+            <td className="tabular px-2 py-2 text-right text-content-secondary">
               {formatPrice(position.averageCost, 'USD', i18n.language, position.assetClass)}
             </td>
             {/* `—` y no cero cuando falta la cotización: un cero aquí se leería
                 como «vale nada», que es una afirmación que no podemos hacer. */}
-            <td className="px-2 py-2 text-right tabular text-content">
+            <td className="tabular px-2 py-2 text-right text-content">
               {position.price !== null
                 ? formatPrice(position.price, 'USD', i18n.language, position.assetClass)
                 : '—'}
             </td>
-            <td className="px-2 py-2 text-right tabular text-content">
+            <td className="tabular px-2 py-2 text-right text-content">
               {position.marketValue !== null
                 ? formatPrice(position.marketValue, 'USD', i18n.language)
                 : '—'}
             </td>
             <td
               className={cn(
-                'px-4 py-2 text-right tabular',
+                'tabular px-4 py-2 text-right',
                 position.unrealizedPnl === null
                   ? 'text-content-muted'
                   : position.unrealizedPnl >= 0
@@ -323,7 +321,7 @@ function HistoryTable({
 
           return (
             <tr key={transaction.id} className="border-t border-edge hover:bg-elevated">
-              <td className="px-4 py-2 tabular text-content-muted">
+              <td className="tabular px-4 py-2 text-content-muted">
                 {formatDateTime(new Date(transaction.executedAt), i18n.language)}
               </td>
               <td className="px-2 py-2 text-content">{transaction.symbol}</td>
@@ -335,10 +333,10 @@ function HistoryTable({
               >
                 {t(`portfolio.side.${transaction.side}`)}
               </td>
-              <td className="px-2 py-2 text-right tabular text-content-secondary">
+              <td className="tabular px-2 py-2 text-right text-content-secondary">
                 {transaction.quantity.toLocaleString(i18n.language, { maximumFractionDigits: 8 })}
               </td>
-              <td className="px-2 py-2 text-right tabular text-content-secondary">
+              <td className="tabular px-2 py-2 text-right text-content-secondary">
                 {formatPrice(
                   transaction.pricePerUnit,
                   transaction.currency,
@@ -346,12 +344,12 @@ function HistoryTable({
                   transaction.assetClass,
                 )}
               </td>
-              <td className="px-2 py-2 text-right tabular text-content-muted">
+              <td className="tabular px-2 py-2 text-right text-content-muted">
                 {transaction.fees > 0
                   ? formatPrice(transaction.fees, transaction.currency, i18n.language)
                   : '—'}
               </td>
-              <td className="px-2 py-2 text-right tabular text-content">
+              <td className="tabular px-2 py-2 text-right text-content">
                 {formatPrice(total, transaction.currency, i18n.language)}
               </td>
               <td className="px-4 py-2 text-right">

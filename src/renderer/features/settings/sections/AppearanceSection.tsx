@@ -37,7 +37,7 @@ export function AppearanceSection(): React.JSX.Element {
 
       {/* Muestra viva: el usuario ve el efecto sin salir de la pantalla. */}
       <Field label={t('settings.appearance.preview')}>
-        <div className="flex items-center gap-4 text-sm tabular">
+        <div className="tabular flex items-center gap-4 text-sm">
           <span className="text-positive">+2,41 %</span>
           <span className="text-negative">−1,08 %</span>
           <span className="text-accent">{t('settings.appearance.accent')}</span>

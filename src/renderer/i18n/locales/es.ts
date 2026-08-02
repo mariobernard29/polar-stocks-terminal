@@ -82,6 +82,24 @@ export const es = {
       threshold: 'El umbral debe ser un número.',
     },
   },
+  ai: {
+    send: 'Enviar',
+    stop: 'Detener',
+    sources: 'Datos usados:',
+    noSources: 'Respondido sin datos de mercado.',
+    placeholder: '¿Cómo va AAPL hoy? ¿Y mi cartera?',
+    emptyTitle: 'Pregunta sobre el mercado o sobre tu cartera.',
+    emptyHint:
+      'Polar AI solo responde con datos obtenidos de las APIs configuradas. Bajo cada respuesta verás exactamente qué datos se usaron.',
+    notConfigured:
+      'No hay clave configurada para {{provider}}. Añádela en Configuración → APIs para poder preguntar.',
+    genericError: 'No se pudo completar la respuesta.',
+    disclaimer:
+      'Polar AI responde únicamente con los datos que la aplicación ha obtenido de las APIs. No consulta su propio conocimiento para precios ni cifras. Aun así, comprueba las fuentes que se listan bajo cada respuesta antes de tomar una decisión.',
+    provider: 'Proveedor de IA',
+    model: 'Modelo',
+    modelHint: 'Vacío usa el modelo por defecto del proveedor ({{model}}).',
+  },
   nav: {
     dashboard: 'Panel',
     markets: 'Mercados',
@@ -92,6 +110,7 @@ export const es = {
     screeners: 'Screeners',
     alerts: 'Alertas',
     favorites: 'Favoritos',
+    ai: 'Polar AI',
     settings: 'Configuración',
     collapse: 'Contraer barra lateral',
     expand: 'Expandir barra lateral',
@@ -130,6 +149,7 @@ export const es = {
       description: 'Avisos de precio y variación, evaluados en segundo plano.',
     },
     favorites: { title: 'Favoritos', description: 'Acceso rápido a tus activos habituales.' },
+    ai: { title: 'Polar AI', description: 'Asistente anclado a los datos de la aplicación.' },
     settings: { title: 'Configuración', description: 'Preferencias, APIs y base de datos.' },
   },
   phases: {
@@ -295,6 +315,16 @@ export const es = {
   },
 
   settings: {
+    ai: {
+      title: 'Polar AI',
+      description: 'Proveedor, modelo y clave del asistente.',
+      apiKey: 'Clave de API',
+      apiKeyPlaceholder: 'Pega aquí tu clave',
+      configured: 'Clave configurada',
+      notConfigured: 'Sin clave',
+      getKey: 'Obtener una clave',
+      saved: 'Guardada',
+    },
     general: {
       title: 'General',
       description: 'Comportamiento de la aplicación al arrancar y al trabajar.',

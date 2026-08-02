@@ -119,8 +119,7 @@ export const ipc = {
       call('portfolio:addTransaction', input),
     deleteTransaction: (id: string) => call('portfolio:deleteTransaction', { id }),
     dividends: (portfolioId: string) => call('portfolio:dividends', { portfolioId }),
-    addDividend: (input: IpcInput<'portfolio:addDividend'>) =>
-      call('portfolio:addDividend', input),
+    addDividend: (input: IpcInput<'portfolio:addDividend'>) => call('portfolio:addDividend', input),
     deleteDividend: (id: string) => call('portfolio:deleteDividend', { id }),
   },
   alerts: {
@@ -132,6 +131,11 @@ export const ipc = {
     acknowledge: (id: string) => call('alerts:acknowledge', { id }),
     acknowledgeAll: () => call('alerts:acknowledgeAll'),
     capabilities: () => call('alerts:capabilities'),
+  },
+  ai: {
+    providers: () => call('ai:providers'),
+    ask: (input: IpcInput<'ai:ask'>) => call('ai:ask', input),
+    cancel: () => call('ai:cancel'),
   },
   layouts: {
     list: () => call('layouts:list'),

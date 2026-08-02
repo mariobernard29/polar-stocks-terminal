@@ -140,15 +140,15 @@ export function ScreenersPage(): React.JSX.Element {
                   global por capitalización y no dice nada sobre la ordenación
                   que el usuario está viendo.
                 */}
-                <td className="px-4 py-1.5 tabular text-content-muted">{index + 1}</td>
+                <td className="tabular px-4 py-1.5 text-content-muted">{index + 1}</td>
                 <td className="px-2 py-1.5 text-content">{row.symbol}</td>
                 <td className="max-w-56 truncate px-2 py-1.5 text-content-muted">{row.name}</td>
-                <td className="px-2 py-1.5 text-right tabular text-content">
+                <td className="tabular px-2 py-1.5 text-right text-content">
                   {formatPrice(row.price, 'USD', i18n.language, row.assetClass)}
                 </td>
                 <td
                   className={cn(
-                    'px-2 py-1.5 text-right tabular',
+                    'tabular px-2 py-1.5 text-right',
                     row.changePercent >= 0 ? 'text-positive' : 'text-negative',
                   )}
                 >
@@ -156,10 +156,10 @@ export function ScreenersPage(): React.JSX.Element {
                 </td>
                 {/* `—` y no cero: estos endpoints de renta variable no traen
                     capitalización ni volumen, y fingir un cero sería falso. */}
-                <td className="px-2 py-1.5 text-right tabular text-content-secondary">
+                <td className="tabular px-2 py-1.5 text-right text-content-secondary">
                   {row.marketCap !== null ? formatCompact(row.marketCap, i18n.language) : '—'}
                 </td>
-                <td className="px-4 py-1.5 text-right tabular text-content-secondary">
+                <td className="tabular px-4 py-1.5 text-right text-content-secondary">
                   {row.volume !== null ? formatCompact(row.volume, i18n.language) : '—'}
                 </td>
               </tr>

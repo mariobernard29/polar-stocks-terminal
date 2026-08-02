@@ -30,7 +30,7 @@ export function MarketClocks(): React.JSX.Element {
 function Clock({ label, time }: { label: string; time: string }): React.JSX.Element {
   return (
     <div className="flex items-baseline gap-2">
-      <span className="text-[10px] uppercase tracking-wide text-content-muted">{label}</span>
+      <span className="text-[10px] tracking-wide text-content-muted uppercase">{label}</span>
       <span className="tabular text-xs text-content-secondary">{time}</span>
     </div>
   )

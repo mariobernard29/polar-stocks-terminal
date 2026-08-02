@@ -82,7 +82,7 @@ export function AssetHeader({
               <span className={cn('tabular text-sm', tone)}>
                 {formatChange(quote.change, locale)} ({formatPercent(quote.changePercent, locale)})
               </span>
-              <span className="text-[10px] uppercase tracking-wide text-content-muted">
+              <span className="text-[10px] tracking-wide text-content-muted uppercase">
                 {t(`session.${quote.marketState}`)}
               </span>
             </>
@@ -96,7 +96,7 @@ export function AssetHeader({
       */}
       {quote?.extendedPrice != null && (
         <div className="flex items-baseline gap-2 border-t border-edge pt-3 text-xs">
-          <span className="uppercase tracking-wide text-content-muted">
+          <span className="tracking-wide text-content-muted uppercase">
             {t(`session.${quote.marketState}`)}
           </span>
           <span className="tabular text-content">

@@ -110,7 +110,9 @@ export function AssetPage(): React.JSX.Element {
               label: t('asset.maxSupply'),
               // `null` en supply máximo no es «cero»: significa que esa moneda
               // no tiene tope de emisión, como Ethereum. Decirlo es un dato.
-              value: metrics.data ? (fmt(metrics.data.maxSupply, locale) ?? t('asset.noCap')) : null,
+              value: metrics.data
+                ? (fmt(metrics.data.maxSupply, locale) ?? t('asset.noCap'))
+                : null,
             },
             {
               label: t('asset.dominance'),
@@ -163,7 +165,7 @@ export function AssetPage(): React.JSX.Element {
 
       {profile.data && (profile.data.description || profile.data.sector) && (
         <section className="flex flex-col gap-4 rounded-panel border border-edge bg-surface p-6">
-          <h2 className="text-xs font-medium uppercase tracking-wide text-content-muted">
+          <h2 className="text-xs font-medium tracking-wide text-content-muted uppercase">
             {t('asset.about')}
           </h2>
 
@@ -175,7 +177,7 @@ export function AssetPage(): React.JSX.Element {
           </dl>
 
           {profile.data.description && (
-            <p className="max-w-3xl text-xs leading-relaxed text-content-secondary text-selectable">
+            <p className="text-selectable max-w-3xl text-xs leading-relaxed text-content-secondary">
               {profile.data.description}
             </p>
           )}
@@ -195,7 +197,7 @@ export function AssetPage(): React.JSX.Element {
 
       {news.data && news.data.length > 0 && (
         <section className="flex flex-col gap-3 rounded-panel border border-edge bg-surface p-6">
-          <h2 className="text-xs font-medium uppercase tracking-wide text-content-muted">
+          <h2 className="text-xs font-medium tracking-wide text-content-muted uppercase">
             {t('asset.news')}
           </h2>
           <ul className="divide-y divide-edge">

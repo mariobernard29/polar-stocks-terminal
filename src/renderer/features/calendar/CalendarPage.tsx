@@ -136,9 +136,7 @@ export function CalendarPage(): React.JSX.Element {
       {!economic.isAvailable && (
         <div className="flex items-start gap-2 rounded-panel border border-edge bg-elevated p-3">
           <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-warning" aria-hidden />
-          <p className="text-xs leading-relaxed text-content-muted">
-            {t('calendar.noEconomic')}
-          </p>
+          <p className="text-xs leading-relaxed text-content-muted">{t('calendar.noEconomic')}</p>
         </div>
       )}
 
@@ -154,7 +152,7 @@ export function CalendarPage(): React.JSX.Element {
 
       {byDay.map(([day, dayEvents]) => (
         <section key={day} className="flex flex-col gap-2">
-          <h2 className="text-xs font-medium uppercase tracking-wide text-content-muted">
+          <h2 className="text-xs font-medium tracking-wide text-content-muted uppercase">
             {new Intl.DateTimeFormat(i18n.language, {
               weekday: 'long',
               day: 'numeric',
@@ -205,7 +203,7 @@ function EventDetail({
 
   if (event.kind === 'earnings') {
     return (
-      <span className="flex shrink-0 items-center gap-3 text-[11px] tabular">
+      <span className="tabular flex shrink-0 items-center gap-3 text-[11px]">
         {event.timing && event.timing !== 'unknown' && (
           <span className="text-content-muted">{t(`calendar.timing.${event.timing}`)}</span>
         )}
@@ -220,7 +218,7 @@ function EventDetail({
 
   if (event.kind === 'dividend') {
     return (
-      <span className="shrink-0 text-[11px] tabular text-content-secondary">
+      <span className="tabular shrink-0 text-[11px] text-content-secondary">
         {event.amount !== null
           ? new Intl.NumberFormat(locale, {
               style: 'currency',
@@ -233,7 +231,7 @@ function EventDetail({
   }
 
   return (
-    <span className="flex shrink-0 items-center gap-3 text-[11px] tabular text-content-secondary">
+    <span className="tabular flex shrink-0 items-center gap-3 text-[11px] text-content-secondary">
       {event.priceRange && <span>{event.priceRange}</span>}
       {event.shares !== null && <span>{formatCompact(event.shares, locale)}</span>}
     </span>

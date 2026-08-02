@@ -177,6 +177,22 @@ export const favoriteSchema = z.object({
 })
 export type Favorite = z.infer<typeof favoriteSchema>
 
+/**
+ * Un proveedor de IA para Configuración.
+ *
+ * `hasKey` y no la clave, igual que con los proveedores de mercado: el renderer
+ * necesita saber si está configurado, nunca cuál es.
+ */
+export const aiProviderSummarySchema = z.object({
+  id: z.enum(['anthropic', 'openai', 'gemini']),
+  displayName: z.string(),
+  defaultModel: z.string(),
+  knownModels: z.array(z.string()),
+  docsUrl: z.string(),
+  hasKey: z.boolean(),
+})
+export type AiProviderSummary = z.infer<typeof aiProviderSummarySchema>
+
 export const streamStatusSchema = z.enum(['connecting', 'open', 'closed'])
 export type StreamStatus = z.infer<typeof streamStatusSchema>
 
@@ -493,6 +509,47 @@ export const ipcContract = {
    * cotizaciones configurado las alertas se guardan pero nunca se evaluarán.
    * Prometer vigilancia que no existe es la peor forma de fallar aquí.
    */
+  // ─── Polar AI ─────────────────────────────────────────────────────────────
+
+  'ai:providers': { input: z.void(), output: z.array(aiProviderSummarySchema) },
+
+  /**
+   * Pregunta a Polar AI.
+   *
+   * El texto de la respuesta **no viaja aquí**: llega trozo a trozo por el
+   * evento `ai:delta` mientras el modelo escribe. Lo que devuelve este canal, al
+   * terminar, es de dónde salió cada dato.
+   *
+   * Ese resumen de fuentes es la parte que hace comprobable el «nunca inventar»:
+   * el prompt y el contexto reducen la probabilidad de una cifra falsa, pero
+   * enseñar debajo qué datos se usaron es lo que permite detectarla.
+   */
+  'ai:ask': {
+    input: z.object({
+      question: z.string().trim().min(1).max(4_000),
+      /** Turnos anteriores. El proceso principal recorta a los últimos. */
+      history: z
+        .array(
+          z.object({
+            role: z.enum(['user', 'assistant']),
+            content: z.string().max(20_000),
+          }),
+        )
+        .max(40)
+        .default([]),
+      /** Activo abierto en la aplicación, si lo hay. */
+      focusSymbol: symbolSchema.nullable().default(null),
+    }),
+    output: z.object({
+      sources: z.array(z.string()),
+      failures: z.array(z.string()),
+      provider: z.string(),
+      model: z.string(),
+    }),
+  },
+
+  'ai:cancel': { input: z.void(), output: z.void() },
+
   'alerts:capabilities': {
     input: z.void(),
     output: z.object({
@@ -554,6 +611,15 @@ export const ipcEvents = {
    * justo lo que una alerta no puede permitirse.
    */
   'alerts:triggered': alertTriggerSchema,
+
+  /**
+   * Un trozo de la respuesta de Polar AI.
+   *
+   * Va por push porque la respuesta se escribe durante segundos y el panel debe
+   * mostrarla conforme llega. Devolverla entera al final dejaría la columna en
+   * blanco todo ese rato, que parece un cuelgue.
+   */
+  'ai:delta': z.object({ text: z.string() }),
 } as const satisfies Record<IpcEventName, z.ZodType>
 
 export type IpcEvents = typeof ipcEvents

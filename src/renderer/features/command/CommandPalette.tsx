@@ -103,11 +103,12 @@ export function CommandPalette(): React.JSX.Element {
    * Se controla el valor: la selección por defecto es siempre el primer
    * resultado, y las flechas la mueven a partir de ahí.
    */
-  const topValue = confirmedSymbol && parsed.hasExplicitAction
-    ? `action:${confirmedSymbol}:${parsed.action}`
-    : results[0]
-      ? `symbol:${results[0].symbol}`
-      : undefined
+  const topValue =
+    confirmedSymbol && parsed.hasExplicitAction
+      ? `action:${confirmedSymbol}:${parsed.action}`
+      : results[0]
+        ? `symbol:${results[0].symbol}`
+        : undefined
 
   const [manualValue, setManualValue] = useState<string | null>(null)
   const [lastQuery, setLastQuery] = useState(searchText)
@@ -243,7 +244,9 @@ function PaletteItem({
           {badge}
         </span>
       )}
-      {shortcut && <kbd className="shrink-0 text-[10px] tabular text-content-muted">{shortcut}</kbd>}
+      {shortcut && (
+        <kbd className="tabular shrink-0 text-[10px] text-content-muted">{shortcut}</kbd>
+      )}
     </Command.Item>
   )
 }

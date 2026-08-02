@@ -1,4 +1,5 @@
 import type { IpcHandlers } from '../register'
+import * as aiHandlers from './ai'
 import * as alertHandlers from './alerts'
 import * as appHandlers from './app'
 import * as dbHandlers from './db'
@@ -98,4 +99,8 @@ export const handlers: IpcHandlers = {
   'alerts:acknowledge': alertHandlers.acknowledge,
   'alerts:acknowledgeAll': alertHandlers.acknowledgeAll,
   'alerts:capabilities': alertHandlers.capabilities,
+
+  'ai:providers': aiHandlers.providers,
+  'ai:ask': aiHandlers.askQuestion,
+  'ai:cancel': aiHandlers.cancel,
 }

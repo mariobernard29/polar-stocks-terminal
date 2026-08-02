@@ -20,6 +20,17 @@ export const settingsCatalog = {
   'general.launchOnStartup': { schema: z.boolean(), default: false },
   'general.restoreLastLayout': { schema: z.boolean(), default: true },
 
+  /**
+   * Proveedor de IA activo.
+   *
+   * Conmutable en caliente y sin ninguno cableado, como se decidió en Fase 1.
+   * El modelo va aparte y en texto libre: los catálogos cambian cada pocos
+   * meses, y un `enum` obligaría a publicar una versión de la aplicación para
+   * poder usar un modelo que ya existe.
+   */
+  'ai.provider': { schema: z.enum(['anthropic', 'openai', 'gemini']), default: 'anthropic' },
+  'ai.model': { schema: z.string().max(100), default: '' },
+
   'appearance.density': { schema: z.enum(['comfortable', 'compact']), default: 'comfortable' },
   'appearance.marketColors': {
     schema: z.enum(['standard', 'inverted', 'colorblind']),

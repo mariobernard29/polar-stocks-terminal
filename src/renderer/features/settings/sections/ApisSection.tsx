@@ -83,7 +83,11 @@ export function ApisSection(): React.JSX.Element {
             onPriority={(priority) => setConfig.mutate({ provider: provider.id, priority })}
             onTest={() => testCredential.mutate(provider.id)}
             testing={testCredential.isPending && testCredential.variables === provider.id}
-            testResult={testCredential.data && testCredential.variables === provider.id ? testCredential.data : null}
+            testResult={
+              testCredential.data && testCredential.variables === provider.id
+                ? testCredential.data
+                : null
+            }
           />
         ))}
       </Section>
@@ -155,11 +159,7 @@ export function ProviderCard({
           </span>
         </div>
 
-        <Toggle
-          checked={provider.enabled}
-          onChange={onToggle}
-          label={t('settings.apis.enabled')}
-        />
+        <Toggle checked={provider.enabled} onChange={onToggle} label={t('settings.apis.enabled')} />
       </div>
 
       {provider.capabilities.length > 0 && (
@@ -274,7 +274,7 @@ function CapabilityList({
     <div className="flex flex-col gap-1.5">
       <h3
         className={cn(
-          'text-[10px] uppercase tracking-wide',
+          'text-[10px] tracking-wide uppercase',
           tone === 'positive' && 'text-positive',
           tone === 'warning' && 'text-warning',
           tone === 'muted' && 'text-content-muted',

@@ -63,7 +63,7 @@ export function WorkspaceToolbar({
           <>
             {/* Capa invisible que cierra el menú al pulsar fuera. */}
             <div className="fixed inset-0 z-40" onClick={() => setAddOpen(false)} aria-hidden />
-            <ul className="absolute left-0 top-full z-50 mt-1 w-48 overflow-hidden rounded-panel border border-edge bg-overlay py-1 shadow-xl">
+            <ul className="absolute top-full left-0 z-50 mt-1 w-48 overflow-hidden rounded-panel border border-edge bg-overlay py-1 shadow-xl">
               {Object.values(PANEL_REGISTRY).map((definition) => (
                 <li key={definition.type}>
                   <button
@@ -124,7 +124,7 @@ export function WorkspaceToolbar({
                 <button
                   type="button"
                   onClick={() => void handleLoad(layout.id)}
-                  className="flex items-center gap-1.5 py-1 pl-2 pr-1 text-[11px] text-content-secondary transition-colors duration-120 hover:text-content"
+                  className="flex items-center gap-1.5 py-1 pr-1 pl-2 text-[11px] text-content-secondary transition-colors duration-120 hover:text-content"
                   title={t('workspace.loadLayout')}
                 >
                   {layout.isDefault && <Star className="size-2.5 fill-accent text-accent" />}
@@ -134,7 +134,7 @@ export function WorkspaceToolbar({
                   type="button"
                   onClick={() => void layouts.setDefault(layout.id)}
                   title={t('workspace.makeDefault')}
-                  className="px-1 py-1 text-content-muted opacity-0 transition-opacity hover:text-accent group-hover:opacity-100"
+                  className="px-1 py-1 text-content-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-accent"
                 >
                   <Star className="size-2.5" aria-hidden />
                 </button>
@@ -142,7 +142,7 @@ export function WorkspaceToolbar({
                   type="button"
                   onClick={() => void layouts.remove(layout.id)}
                   title={t('workspace.deleteLayout')}
-                  className="px-1 py-1 pr-1.5 text-content-muted opacity-0 transition-opacity hover:text-negative group-hover:opacity-100"
+                  className="px-1 py-1 pr-1.5 text-content-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-negative"
                 >
                   <Trash2 className="size-2.5" aria-hidden />
                 </button>

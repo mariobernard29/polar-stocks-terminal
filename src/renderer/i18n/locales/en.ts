@@ -82,6 +82,24 @@ export const en: TranslationShape = {
       threshold: 'The threshold must be a number.',
     },
   },
+  ai: {
+    send: 'Send',
+    stop: 'Stop',
+    sources: 'Data used:',
+    noSources: 'Answered without market data.',
+    placeholder: 'How is AAPL doing today? And my portfolio?',
+    emptyTitle: 'Ask about the market or about your portfolio.',
+    emptyHint:
+      'Polar AI only answers from data fetched through the configured APIs. Under each answer you will see exactly which data was used.',
+    notConfigured:
+      'No key configured for {{provider}}. Add one in Settings → APIs to start asking.',
+    genericError: 'The answer could not be completed.',
+    disclaimer:
+      'Polar AI answers only from data the app fetched through the APIs. It does not draw on its own knowledge for prices or figures. Even so, check the sources listed under each answer before acting on it.',
+    provider: 'AI provider',
+    model: 'Model',
+    modelHint: 'Leave empty to use the provider default ({{model}}).',
+  },
   nav: {
     dashboard: 'Dashboard',
     markets: 'Markets',
@@ -92,6 +110,7 @@ export const en: TranslationShape = {
     screeners: 'Screeners',
     alerts: 'Alerts',
     favorites: 'Favorites',
+    ai: 'Polar AI',
     settings: 'Settings',
     collapse: 'Collapse sidebar',
     expand: 'Expand sidebar',
@@ -130,6 +149,7 @@ export const en: TranslationShape = {
       description: 'Price and change alerts, evaluated in the background.',
     },
     favorites: { title: 'Favorites', description: 'Quick access to your usual assets.' },
+    ai: { title: 'Polar AI', description: 'Assistant grounded in the app’s own data.' },
     settings: { title: 'Settings', description: 'Preferences, APIs and database.' },
   },
   phases: {
@@ -295,6 +315,16 @@ export const en: TranslationShape = {
   },
 
   settings: {
+    ai: {
+      title: 'Polar AI',
+      description: 'Assistant provider, model and key.',
+      apiKey: 'API key',
+      apiKeyPlaceholder: 'Paste your key here',
+      configured: 'Key configured',
+      notConfigured: 'No key',
+      getKey: 'Get a key',
+      saved: 'Saved',
+    },
     general: {
       title: 'General',
       description: 'How the app behaves on launch and while you work.',

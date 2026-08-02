@@ -97,7 +97,5 @@ export function resolvePanelParams(type: string, params: unknown): Record<string
   if (!definition) return {}
 
   const parsed = definition.paramsSchema.safeParse(params)
-  return parsed.success
-    ? (parsed.data as Record<string, unknown>)
-    : { ...definition.defaultParams }
+  return parsed.success ? (parsed.data as Record<string, unknown>) : { ...definition.defaultParams }
 }

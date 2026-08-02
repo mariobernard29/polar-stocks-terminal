@@ -24,6 +24,13 @@ export const ipcErrorCodeSchema = z.enum([
   'DATABASE_ERROR',
   /** El usuario no ha configurado la credencial necesaria. */
   'MISSING_CREDENTIAL',
+  /**
+   * El usuario abortó la operación.
+   *
+   * Tiene código propio para que la interfaz no lo pinte en rojo: cancelar una
+   * respuesta de la IA a media escritura es una acción normal, no un fallo.
+   */
+  'CANCELLED',
   /** Cualquier otra cosa. Se registra con traza completa en el main. */
   'INTERNAL',
 ])

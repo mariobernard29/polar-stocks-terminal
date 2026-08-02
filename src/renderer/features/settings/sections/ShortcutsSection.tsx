@@ -15,10 +15,7 @@ import { Section } from '../ui'
 export function ShortcutsSection(): React.JSX.Element {
   const { t } = useTranslation()
 
-  const bound = useMemo(
-    () => COMMANDS.filter((command) => command.shortcut !== null),
-    [],
-  )
+  const bound = useMemo(() => COMMANDS.filter((command) => command.shortcut !== null), [])
 
   const conflicts = useMemo(
     () =>
@@ -43,7 +40,10 @@ export function ShortcutsSection(): React.JSX.Element {
   }, [bound])
 
   return (
-    <Section title={t('settings.shortcuts.title')} description={t('settings.shortcuts.description')}>
+    <Section
+      title={t('settings.shortcuts.title')}
+      description={t('settings.shortcuts.description')}
+    >
       {conflicts.length > 0 ? (
         <div className="flex items-start gap-2 rounded-panel border border-warning bg-elevated p-3">
           <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-warning" aria-hidden />
@@ -63,7 +63,7 @@ export function ShortcutsSection(): React.JSX.Element {
 
       {grouped.map(([group, commands]) => (
         <div key={group} className="flex flex-col gap-1.5">
-          <h3 className="text-[10px] uppercase tracking-wide text-content-muted">
+          <h3 className="text-[10px] tracking-wide text-content-muted uppercase">
             {t(`palette.groups.${group}`)}
           </h3>
           {commands.map((command) => (
@@ -75,7 +75,7 @@ export function ShortcutsSection(): React.JSX.Element {
                 <command.icon className="size-3.5 shrink-0 text-content-muted" aria-hidden />
                 {t(`commands.${command.labelKey}`)}
               </span>
-              <kbd className="shrink-0 rounded border border-edge bg-elevated px-1.5 py-0.5 text-[10px] tabular text-content-secondary">
+              <kbd className="tabular shrink-0 rounded border border-edge bg-elevated px-1.5 py-0.5 text-[10px] text-content-secondary">
                 {normalizeShortcut(command.shortcut ?? '')}
               </kbd>
             </div>

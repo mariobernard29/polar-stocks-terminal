@@ -141,7 +141,7 @@ export function TransactionForm({
       onSubmit={submit}
       className="flex flex-col gap-3 rounded-panel border border-edge bg-surface p-4"
     >
-      <h3 className="text-xs font-medium uppercase tracking-wide text-content-muted">
+      <h3 className="text-xs font-medium tracking-wide text-content-muted uppercase">
         {t('portfolio.addTransaction')}
       </h3>
 
@@ -245,7 +245,7 @@ function Field({
 }): React.JSX.Element {
   return (
     <label className={cn('flex flex-col gap-1', className)}>
-      <span className="text-[10px] uppercase tracking-wide text-content-muted">{label}</span>
+      <span className="text-[10px] tracking-wide text-content-muted uppercase">{label}</span>
       {children}
     </label>
   )

@@ -263,12 +263,12 @@ function QuoteTable({
                   )}
                 </span>
               </td>
-              <td className="py-1.5 text-right tabular text-content-secondary">
+              <td className="tabular py-1.5 text-right text-content-secondary">
                 {quote ? formatPrice(quote.price, quote.currency, i18n.language) : '·'}
               </td>
               <td
                 className={cn(
-                  'py-1.5 text-right tabular',
+                  'tabular py-1.5 text-right',
                   !quote
                     ? 'text-content-muted'
                     : quote.changePercent >= 0
@@ -284,7 +284,7 @@ function QuoteTable({
                     <button
                       type="button"
                       onClick={() => onRemove(itemId)}
-                      className="text-content-muted opacity-0 transition-opacity hover:text-negative group-hover:opacity-100"
+                      className="text-content-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-negative"
                       title={t('watchlists.removeSymbol')}
                     >
                       <X className="size-3" aria-hidden />
@@ -303,7 +303,7 @@ function QuoteTable({
 
   return (
     <section className="flex flex-col gap-3 rounded-panel border border-edge bg-surface p-5">
-      <h2 className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-content-muted">
+      <h2 className="flex items-center gap-2 text-xs font-medium tracking-wide text-content-muted uppercase">
         {Icon && <Icon className="size-3.5 text-accent" />}
         {title}
       </h2>

@@ -81,8 +81,9 @@ acciones y uno de cripto.
   exigirían sondear sin parar endpoints que el plan gratuito limita o deniega
 - ✅ Notificaciones de escritorio
 - ✅ Centro de alertas disparadas
-- ⬜ **Polar AI**: panel de IA multi-proveedor (Anthropic, OpenAI, Gemini),
-  configurable por el usuario
+- ✅ **Polar AI**: panel de IA multi-proveedor (Anthropic, OpenAI, Gemini),
+  conmutable por el usuario, con respuesta en streaming
+- ✅ Anclaje a datos reales, con las fuentes visibles bajo cada respuesta
 - ⬜ Notas ancladas a activos (el modelo `Note` ya existe)
 
 **Regla del panel de IA:** responde únicamente con datos obtenidos por las APIs

@@ -322,6 +322,43 @@ pero no se evalúan, y eso se dice en rojo.
 
 ---
 
+## Polar AI
+
+El requisito era que no invente nada. Un prompt no lo garantiza —ninguno lo
+hace—, así que se sostiene sobre tres capas:
+
+1. **No dar margen.** Los datos se recopilan *antes* de preguntar
+   (`src/main/ai/context-builder.ts`) y se entregan en un bloque cerrado. El
+   modelo no recibe herramientas para buscar más: lo que hay es lo que hay.
+2. **Instruir sin ambigüedad.** `src/shared/ai/prompt.ts` prohíbe usar
+   conocimiento propio para cualquier cifra y obliga a citar fuente y antigüedad.
+3. **Hacerlo verificable.** Bajo cada respuesta se listan los datos que se
+   usaron.
+
+La tercera es la que de verdad protege al usuario. Las dos primeras reducen la
+probabilidad de una cifra falsa; la última la hace detectable a simple vista, y
+es la única que no depende de que el modelo obedezca.
+
+Qué se recopila lo decide la propia pregunta: se extraen los símbolos que
+menciona (con una lista de exclusión para que «¿el PER de AAPL?» no vaya a
+buscar cotización de `PER`), y solo se piden noticias o cartera si el texto habla
+de ellas. Cargar de oficio veinte símbolos «por si acaso» agotaría la cuota del
+plan gratuito en unas pocas preguntas y llenaría el contexto de ruido.
+
+Lo que **falla también viaja al modelo**: si no se pudo obtener una cotización,
+se le dice, para que pueda mencionarlo en vez de callarse o improvisar.
+
+Los tres proveedores hablan SSE con formas distintas dentro. El transporte se
+comparte en `src/main/ai/sse.ts`; cada adaptador solo interpreta su JSON. Ese
+lector admite `\n`, `\r\n` y `\r` como fin de línea porque **Gemini usa `\r\n`**:
+buscando solo `\n\n` la respuesta llegaba vacía, sin error y sin rastro visible
+en un volcado.
+
+Las claves siguen el mismo camino que las de mercado: cifradas con `safeStorage`
+y sin cruzar nunca el IPC. El renderer envía un texto y recibe otro.
+
+---
+
 ## Estado en el renderer
 
 Frontera estricta y deliberada:

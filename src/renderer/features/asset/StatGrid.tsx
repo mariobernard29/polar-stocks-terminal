@@ -29,7 +29,7 @@ export function StatGrid({
   return (
     <section className="flex flex-col gap-4 rounded-panel border border-edge bg-surface p-6">
       <div className="flex items-baseline gap-3">
-        <h2 className="text-xs font-medium uppercase tracking-wide text-content-muted">{title}</h2>
+        <h2 className="text-xs font-medium tracking-wide text-content-muted uppercase">{title}</h2>
 
         {/*
           Un fallo aquí no vacía la página: se dice qué falta y por qué, y el
@@ -45,9 +45,7 @@ export function StatGrid({
       <dl className="grid grid-cols-2 gap-x-8 gap-y-3 md:grid-cols-4">
         {stats.map((stat) => (
           <div key={stat.label} className="flex flex-col gap-0.5">
-            <dt className="text-[10px] uppercase tracking-wide text-content-muted">
-              {stat.label}
-            </dt>
+            <dt className="text-[10px] tracking-wide text-content-muted uppercase">{stat.label}</dt>
             <dd className="tabular text-sm text-content">
               {isLoading ? (
                 <span className="text-content-muted">·</span>

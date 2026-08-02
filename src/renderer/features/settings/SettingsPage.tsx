@@ -9,10 +9,12 @@ import {
   RefreshCw,
   SlidersHorizontal,
   type LucideIcon,
+  Sparkles,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '../../lib/cn'
 import { AboutSection } from './sections/AboutSection'
+import { AiSection } from './sections/AiSection'
 import { ApisSection } from './sections/ApisSection'
 import { AppearanceSection } from './sections/AppearanceSection'
 import { DatabaseSection } from './sections/DatabaseSection'
@@ -41,6 +43,7 @@ const TABS: readonly SettingsTab[] = [
   { id: 'shortcuts', labelKey: 'shortcuts', icon: Keyboard, Component: ShortcutsSection },
   { id: 'language', labelKey: 'language', icon: Languages, Component: LanguageSection },
   { id: 'apis', labelKey: 'apis', icon: KeyRound, Component: ApisSection },
+  { id: 'ai', labelKey: 'ai', icon: Sparkles, Component: AiSection },
   { id: 'database', labelKey: 'database', icon: Database, Component: DatabaseSection },
   { id: 'updates', labelKey: 'updates', icon: RefreshCw, Component: UpdatesSection },
   { id: 'about', labelKey: 'about', icon: Info, Component: AboutSection },
@@ -59,7 +62,7 @@ export function SettingsPage(): React.JSX.Element {
         className="flex w-56 shrink-0 flex-col gap-0.5 border-r border-edge bg-surface p-3"
         aria-label={t('pages.settings.title')}
       >
-        <h1 className="px-3 pb-3 pt-1 text-sm font-medium text-content">
+        <h1 className="px-3 pt-1 pb-3 text-sm font-medium text-content">
           {t('pages.settings.title')}
         </h1>
 

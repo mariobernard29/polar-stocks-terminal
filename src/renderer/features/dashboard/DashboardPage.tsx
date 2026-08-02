@@ -139,7 +139,7 @@ export function DashboardPage(): React.JSX.Element {
 
 function SectionTitle({ children }: { children: React.ReactNode }): React.JSX.Element {
   return (
-    <h2 className="text-xs font-medium uppercase tracking-wide text-content-muted">{children}</h2>
+    <h2 className="text-xs font-medium tracking-wide text-content-muted uppercase">{children}</h2>
   )
 }
 
@@ -148,7 +148,13 @@ function RelativeTime({ at }: { at: number }): React.JSX.Element {
   return <span>{formatRelative(new Date(at), i18n.language)}</span>
 }
 
-function QuoteCard({ symbol, quote }: { symbol: string; quote: Quote | undefined }): React.JSX.Element {
+function QuoteCard({
+  symbol,
+  quote,
+}: {
+  symbol: string
+  quote: Quote | undefined
+}): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
 
@@ -167,9 +173,7 @@ function QuoteCard({ symbol, quote }: { symbol: string; quote: Quote | undefined
           <span className="tabular text-lg font-medium text-content">
             {formatPrice(quote.price, quote.currency, i18n.language)}
           </span>
-          <span
-            className={cn('tabular text-xs', positive ? 'text-positive' : 'text-negative')}
-          >
+          <span className={cn('tabular text-xs', positive ? 'text-positive' : 'text-negative')}>
             {formatPercent(quote.changePercent, i18n.language)}
           </span>
         </>
@@ -196,7 +200,7 @@ function MoverList({
 
   return (
     <section className="flex flex-col gap-3 rounded-panel border border-edge bg-surface p-5">
-      <h2 className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-content-muted">
+      <h2 className="flex items-center gap-2 text-xs font-medium tracking-wide text-content-muted uppercase">
         <Icon className={cn('size-3.5', tone === 'positive' ? 'text-positive' : 'text-negative')} />
         {title}
       </h2>
@@ -213,15 +217,15 @@ function MoverList({
                 className="cursor-pointer border-t border-edge first:border-0 hover:bg-elevated"
               >
                 <td className="py-1.5 text-content">{quote.symbol}</td>
-                <td className="py-1.5 text-right tabular text-content-secondary">
+                <td className="tabular py-1.5 text-right text-content-secondary">
                   {formatPrice(quote.price, 'USD', i18n.language, quote.assetClass)}
                 </td>
-                <td className="py-1.5 text-right tabular text-content-muted">
+                <td className="tabular py-1.5 text-right text-content-muted">
                   {quote.volume !== null ? formatCompact(quote.volume, i18n.language) : '—'}
                 </td>
                 <td
                   className={cn(
-                    'py-1.5 text-right tabular',
+                    'tabular py-1.5 text-right',
                     quote.changePercent >= 0 ? 'text-positive' : 'text-negative',
                   )}
                 >

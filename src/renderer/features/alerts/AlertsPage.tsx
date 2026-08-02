@@ -265,13 +265,13 @@ function AlertForm({
       onSubmit={submit}
       className="flex flex-col gap-3 rounded-panel border border-edge bg-surface p-4"
     >
-      <h3 className="text-xs font-medium uppercase tracking-wide text-content-muted">
+      <h3 className="text-xs font-medium tracking-wide text-content-muted uppercase">
         {t('alerts.create')}
       </h3>
 
       <div className="flex flex-wrap items-end gap-2">
         <label className="flex w-28 flex-col gap-1">
-          <span className="text-[10px] uppercase tracking-wide text-content-muted">
+          <span className="text-[10px] tracking-wide text-content-muted uppercase">
             {t('panels.columns.symbol')}
           </span>
           <input
@@ -284,7 +284,7 @@ function AlertForm({
         </label>
 
         <label className="flex w-36 flex-col gap-1">
-          <span className="text-[10px] uppercase tracking-wide text-content-muted">
+          <span className="text-[10px] tracking-wide text-content-muted uppercase">
             {t('alerts.kind')}
           </span>
           <select
@@ -298,7 +298,7 @@ function AlertForm({
         </label>
 
         <label className="flex w-32 flex-col gap-1">
-          <span className="text-[10px] uppercase tracking-wide text-content-muted">
+          <span className="text-[10px] tracking-wide text-content-muted uppercase">
             {t('alerts.condition')}
           </span>
           <select
@@ -312,7 +312,7 @@ function AlertForm({
         </label>
 
         <label className="flex w-28 flex-col gap-1">
-          <span className="text-[10px] uppercase tracking-wide text-content-muted">
+          <span className="text-[10px] tracking-wide text-content-muted uppercase">
             {t('alerts.threshold')}
           </span>
           <input

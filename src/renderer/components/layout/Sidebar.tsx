@@ -41,7 +41,7 @@ export function Sidebar(): React.JSX.Element {
                 <>
                   <span className="flex-1 truncate">{t(`nav.${item.labelKey}`)}</span>
                   {item.shortcut && (
-                    <kbd className="shrink-0 text-[10px] tabular text-content-muted opacity-0 transition-opacity group-hover:opacity-100">
+                    <kbd className="tabular shrink-0 text-[10px] text-content-muted opacity-0 transition-opacity group-hover:opacity-100">
                       {item.shortcut}
                     </kbd>
                   )}

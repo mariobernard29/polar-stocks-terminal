@@ -112,13 +112,13 @@ function Row({
           )}
         </span>
       </td>
-      <td className="px-3 py-1.5 text-right tabular text-content">
+      <td className="tabular px-3 py-1.5 text-right text-content">
         {formatPrice(quote.price, quote.currency, locale)}
       </td>
-      <td className={cn('px-3 py-1.5 text-right tabular', tone)}>
+      <td className={cn('tabular px-3 py-1.5 text-right', tone)}>
         {formatChange(quote.change, locale)}
       </td>
-      <td className={cn('px-3 py-1.5 text-right tabular', tone)}>
+      <td className={cn('tabular px-3 py-1.5 text-right', tone)}>
         {formatPercent(quote.changePercent, locale)}
       </td>
     </tr>

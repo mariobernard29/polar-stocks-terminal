@@ -36,7 +36,7 @@ export function TopBar(): React.JSX.Element {
       >
         <Search className="size-3.5 shrink-0" aria-hidden />
         <span className="flex-1 truncate">{t('common.searchPlaceholder')}</span>
-        <kbd className="shrink-0 rounded border border-edge px-1 text-[10px] tabular">Ctrl K</kbd>
+        <kbd className="tabular shrink-0 rounded border border-edge px-1 text-[10px]">Ctrl K</kbd>
       </button>
 
       <div className="flex-1" />
@@ -76,7 +76,10 @@ function ConnectionStatus(): React.JSX.Element {
     available === 0 ? 'text-negative' : degraded ? 'text-warning' : 'text-content-secondary'
 
   return (
-    <div className="flex items-center gap-2" title={t('connection.providersActive', { count: available, total })}>
+    <div
+      className="flex items-center gap-2"
+      title={t('connection.providersActive', { count: available, total })}
+    >
       <span
         className={cn(
           'size-1.5 rounded-full',
@@ -84,7 +87,7 @@ function ConnectionStatus(): React.JSX.Element {
         )}
         aria-hidden
       />
-      <span className={cn('text-xs tabular', tone)}>
+      <span className={cn('tabular text-xs', tone)}>
         {available}/{total}
       </span>
     </div>
