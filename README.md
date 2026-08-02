@@ -170,18 +170,55 @@ Tras cualquier subida: `npm run typecheck && npm run lint && npm test && npm run
 
 ## Publicar
 
-Empaquetado e instaladores llegan en la **Fase 5**. La configuración de
-`electron-builder` ya está en `electron-builder.yml`, incluidos el desempaquetado
-del binario nativo del asar y el envío de las migraciones SQL como recurso
-externo.
-
 ```bash
-npm run dist        # instalador para el sistema actual
-npm run dist:win    # instalador NSIS para Windows
+npm run dist:win     # instalador NSIS para Windows
+npm run dist:mac     # DMG — requiere macOS
+npm run dist:linux   # AppImage — requiere Linux
+npm run release      # construye y sube el borrador de la release a GitHub
 ```
 
-Falta por hacer antes de distribuir: firma de código, canal de publicación y
-`electron-updater`.
+Cada sistema se empaqueta en el suyo. No es una limitación que se pueda rodear:
+un DMG necesita el toolchain de Apple y el AppImage un Linux de verdad. Por eso
+`.github/workflows/release.yml` construye los tres en paralelo al empujar una
+etiqueta `v*`, cada uno en su runner.
+
+Verificado ejecutándolo: el instalador de Windows se construye, la aplicación
+empaquetada arranca, **el migrador crea la base de datos desde cero** en
+`%APPDATA%` leyendo los `.sql` de `extraResources`, y el binario nativo de libsql
+carga desde `app.asar.unpacked`. Los de macOS y Linux están configurados pero no
+se han podido probar desde Windows.
+
+### Las aplicaciones no están firmadas
+
+Es una decisión consciente: firmar cuesta un certificado de pago (unos 200-400 €
+al año para Windows) y una cuenta de desarrollador para macOS. Consecuencias
+reales para quien instale:
+
+| Sistema | Qué pasa |
+|---|---|
+| Windows | SmartScreen avisa la primera vez: «Más información» → «Ejecutar de todas formas». La actualización automática funciona. |
+| Linux | Sin avisos. La actualización automática funciona. |
+| **macOS** | Hay que autorizar la aplicación en Privacidad y seguridad. **La actualización automática no funciona**: Squirrel valida la firma antes de sustituir la aplicación. |
+
+La aplicación detecta el caso de macOS y ofrece la página de descargas en lugar
+de un botón que fallaría después de haber descargado. Está en Configuración →
+Actualizaciones, junto con el aviso sobre la firma.
+
+### Actualizaciones
+
+`electron-updater` contra GitHub Releases. **Nada se descarga ni se instala
+solo**: comprobar, descargar e instalar son tres acciones separadas que pide el
+usuario. Una aplicación que se reinicia sola mientras alguien mira una posición
+abierta no es aceptable aquí.
+
+La primera comprobación se retrasa 30 s desde el arranque, para no competir por
+la red con las cotizaciones que el usuario está esperando ver.
+
+Mientras no haya ninguna release publicada, la comprobación responde
+`No published versions on GitHub`. Es correcto, y se muestra tal cual en vez de
+un «algo salió mal» que no diría nada.
+
+Falta antes de una distribución amplia: **firma de código**.
 
 ---
 

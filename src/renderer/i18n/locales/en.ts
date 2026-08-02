@@ -335,7 +335,7 @@ export const en: TranslationShape = {
       restoreLayout: 'Restore last layout',
       restoreLayoutHint: 'On launch, reopen the layout marked as default.',
       launchOnStartup: 'Launch at login',
-      launchOnStartupHint: 'Takes effect once installers exist (Phase 5).',
+      launchOnStartupHint: 'Registers the app with the system login items. Installed app only.',
       secondaryTimezone: 'Secondary timezone',
       secondaryTimezoneHint: 'Second clock in the top bar. New York by default.',
       cacheTtl: 'Cache lifetime (seconds)',
@@ -412,9 +412,26 @@ export const en: TranslationShape = {
     },
     updates: {
       title: 'Updates',
-      description: 'How the app keeps itself current.',
-      notYet: 'The auto-updater is not available yet.',
-      plan: 'It arrives in Phase 5 alongside packaging and signed installers. No button is shown that would do nothing.',
+      status: 'Status',
+      check: 'Check for updates',
+      download: 'Download',
+      installRestart: 'Install and restart',
+      openReleases: 'See all releases',
+      description: 'Check, download and install new versions.',
+      unsigned:
+        'The installers are not code-signed. Windows will show a SmartScreen warning the first time (click «More info» → «Run anyway») and macOS will ask you to allow the app under Privacy & Security. For the same reason, on macOS the update cannot install itself: the new version has to be downloaded manually.',
+      state: {
+        idle: 'Not checked yet.',
+        checking: 'Checking…',
+        available: 'A new version is available: {{version}}.',
+        manual:
+          'A new version is available ({{version}}), but this install cannot apply it on its own. Download it from the releases page.',
+        downloading: 'Downloading version {{version}}…',
+        ready: 'Version {{version}} downloaded and ready to install.',
+        current: 'You are on the latest version ({{version}}).',
+        error: 'The check could not be completed.',
+        unsupported: 'Updates only work in the installed app, not in development mode.',
+      },
     },
     about: {
       title: 'About',

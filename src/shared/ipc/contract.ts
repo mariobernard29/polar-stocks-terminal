@@ -6,6 +6,7 @@ import {
   type IpcEventName,
 } from './channels'
 import { settingsSchema } from '../settings'
+import { updateStateSchema } from '../updates'
 import {
   alertInputSchema,
   alertSchema,
@@ -550,6 +551,14 @@ export const ipcContract = {
 
   'ai:cancel': { input: z.void(), output: z.void() },
 
+  // ─── Actualizaciones ──────────────────────────────────────────────────────
+
+  'updates:state': { input: z.void(), output: updateStateSchema },
+  'updates:check': { input: z.void(), output: updateStateSchema },
+  'updates:download': { input: z.void(), output: z.void() },
+  'updates:install': { input: z.void(), output: z.void() },
+  'updates:openReleases': { input: z.void(), output: z.void() },
+
   'alerts:capabilities': {
     input: z.void(),
     output: z.object({
@@ -620,6 +629,9 @@ export const ipcEvents = {
    * blanco todo ese rato, que parece un cuelgue.
    */
   'ai:delta': z.object({ text: z.string() }),
+
+  /** Cambio de estado del actualizador: comprobando, descargando, listo… */
+  'updates:state': updateStateSchema,
 } as const satisfies Record<IpcEventName, z.ZodType>
 
 export type IpcEvents = typeof ipcEvents

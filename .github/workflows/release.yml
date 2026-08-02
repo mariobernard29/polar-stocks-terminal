@@ -1,0 +1,71 @@
+# Publicación de versiones.
+#
+# Cada sistema se empaqueta en su propio runner porque no queda otra: un DMG de
+# macOS no se puede construir desde Windows ni desde Linux —hace falta el
+# toolchain de Apple—, y el AppImage necesita un Linux de verdad. Intentarlo
+# desde una sola máquina produce artefactos que no arrancan.
+#
+# Las aplicaciones NO se firman. En Windows el instalador funciona igual, con un
+# aviso de SmartScreen la primera vez; en macOS el usuario tendrá que autorizarla
+# en Privacidad y seguridad, y la actualización automática no funcionará ahí
+# (Squirrel valida la firma antes de sustituir la aplicación). La propia
+# aplicación lo detecta y ofrece la descarga manual.
+name: Publicar versión
+
+on:
+  push:
+    tags:
+      - 'v*'
+  # Permite lanzarlo a mano desde la pestaña Actions para probar el proceso sin
+  # tener que crear una etiqueta.
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      # Sin `fail-fast`: si macOS falla, los instaladores de Windows y Linux que
+      # ya se hayan construido siguen siendo válidos y se publican.
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            comando: dist:win
+          - os: macos-latest
+            comando: dist:mac
+          - os: ubuntu-latest
+            comando: dist:linux
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # Las comprobaciones se repiten aquí a propósito: una versión publicada
+      # que no compila o con pruebas en rojo es mucho peor que una publicación
+      # que tarda tres minutos más.
+      - run: npm run lint
+      - run: npm test
+
+      - run: npm run ${{ matrix.comando }}
+        env:
+          # electron-builder lo usa para crear el borrador de la release. Lo
+          # aporta GitHub Actions; no hay que configurar ningún secreto.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: instaladores-${{ matrix.os }}
+          path: |
+            release/*.exe
+            release/*.dmg
+            release/*.AppImage
+            release/*.yml
+            release/*.blockmap
+          if-no-files-found: error

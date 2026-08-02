@@ -54,5 +54,14 @@ linux:
     - AppImage
   category: Office
 
-# El auto-updater se configura en la Fase 5; el bloque se deja documentado.
-publish: null
+# El actualizador lee de aquí. GitHub Releases: no hace falta servidor propio,
+# y el repositorio ya existe.
+#
+# Las aplicaciones NO están firmadas. En Windows y Linux la actualización
+# funciona igual; en macOS no, porque Squirrel valida la firma antes de sustituir
+# la aplicación. El proceso main lo detecta y ofrece la descarga manual en vez de
+# intentar una instalación que fallaría al final.
+publish:
+  provider: github
+  owner: mariobernard29
+  repo: polar-stocks-terminal

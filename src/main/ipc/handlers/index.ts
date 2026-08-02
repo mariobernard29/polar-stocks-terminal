@@ -9,6 +9,7 @@ import * as portfolioHandlers from './portfolio'
 import * as providerHandlers from './providers'
 import * as realtimeHandlers from './realtime'
 import * as settingsHandlers from './settings'
+import * as updateHandlers from './updates'
 import * as windowHandlers from './window'
 import * as workspaceData from './workspace-data'
 
@@ -103,4 +104,10 @@ export const handlers: IpcHandlers = {
   'ai:providers': aiHandlers.providers,
   'ai:ask': aiHandlers.askQuestion,
   'ai:cancel': aiHandlers.cancel,
+
+  'updates:state': updateHandlers.state,
+  'updates:check': updateHandlers.check,
+  'updates:download': updateHandlers.download,
+  'updates:install': updateHandlers.install,
+  'updates:openReleases': updateHandlers.openReleases,
 }

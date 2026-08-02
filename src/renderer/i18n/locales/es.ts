@@ -336,7 +336,7 @@ export const es = {
       restoreLayoutHint:
         'Al abrir la aplicación se recupera la disposición marcada como predeterminada.',
       launchOnStartup: 'Abrir al iniciar sesión',
-      launchOnStartupHint: 'Se aplicará cuando exista instalador (Fase 5).',
+      launchOnStartupHint: 'Registra la aplicación en el inicio de sesión del sistema. Solo en la aplicación instalada.',
       secondaryTimezone: 'Zona horaria secundaria',
       secondaryTimezoneHint: 'Segundo reloj de la barra superior. Nueva York por defecto.',
       cacheTtl: 'Caducidad de la caché (segundos)',
@@ -414,9 +414,27 @@ export const es = {
     },
     updates: {
       title: 'Actualizaciones',
-      description: 'Cómo se mantiene al día la aplicación.',
-      notYet: 'El actualizador automático todavía no está disponible.',
-      plan: 'Llega en la Fase 5, junto con el empaquetado y los instaladores firmados. No se muestra un botón que no haría nada.',
+      status: 'Estado',
+      check: 'Buscar actualizaciones',
+      download: 'Descargar',
+      installRestart: 'Instalar y reiniciar',
+      openReleases: 'Ver todas las versiones',
+      description: 'Comprobar, descargar e instalar versiones nuevas.',
+      unsigned:
+        'Los instaladores no están firmados digitalmente. Windows mostrará un aviso de SmartScreen la primera vez (pulsa «Más información» → «Ejecutar de todas formas») y macOS pedirá autorizar la aplicación en Privacidad y seguridad. Por ese mismo motivo, en macOS la actualización no puede aplicarse sola: hay que descargar la versión nueva a mano.',
+      state: {
+        idle: 'Sin comprobar todavía.',
+        checking: 'Comprobando…',
+        available: 'Hay una versión nueva disponible: {{version}}.',
+        manual:
+          'Hay una versión nueva ({{version}}), pero esta instalación no puede aplicarla sola. Descárgala desde la página de versiones.',
+        downloading: 'Descargando la versión {{version}}…',
+        ready: 'Versión {{version}} descargada y lista para instalar.',
+        current: 'Estás en la última versión ({{version}}).',
+        error: 'No se pudo completar la comprobación.',
+        unsupported:
+          'Las actualizaciones solo funcionan en la aplicación instalada, no en modo desarrollo.',
+      },
     },
     about: {
       title: 'Acerca de',

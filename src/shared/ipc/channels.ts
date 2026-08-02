@@ -98,6 +98,12 @@ export const IPC_CHANNEL_NAMES = [
   'ai:providers',
   'ai:ask',
   'ai:cancel',
+
+  'updates:state',
+  'updates:check',
+  'updates:download',
+  'updates:install',
+  'updates:openReleases',
 ] as const
 
 export type IpcChannelName = (typeof IPC_CHANNEL_NAMES)[number]
@@ -108,6 +114,7 @@ export const IPC_EVENT_NAMES = [
   'market:streamStatus',
   'alerts:triggered',
   'ai:delta',
+  'updates:state',
 ] as const
 
 export type IpcEventName = (typeof IPC_EVENT_NAMES)[number]

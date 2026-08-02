@@ -137,6 +137,13 @@ export const ipc = {
     ask: (input: IpcInput<'ai:ask'>) => call('ai:ask', input),
     cancel: () => call('ai:cancel'),
   },
+  updates: {
+    state: () => call('updates:state'),
+    check: () => call('updates:check'),
+    download: () => call('updates:download'),
+    install: () => call('updates:install'),
+    openReleases: () => call('updates:openReleases'),
+  },
   layouts: {
     list: () => call('layouts:list'),
     get: (id: string) => call('layouts:get', { id }),
