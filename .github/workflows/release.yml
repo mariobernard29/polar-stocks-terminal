@@ -12,6 +12,12 @@
 # aplicación lo detecta y ofrece la descarga manual.
 name: Publicar versión
 
+permissions:
+  # electron-builder crea el borrador de la release con este token. Por
+  # defecto es de solo lectura, y sin esta línea la publicación falla al final
+  # de un build de veinte minutos.
+  contents: write
+
 on:
   push:
     tags:
@@ -29,11 +35,11 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            comando: dist:win
+            comando: release:win
           - os: macos-latest
-            comando: dist:mac
+            comando: release:mac
           - os: ubuntu-latest
-            comando: dist:linux
+            comando: release:linux
 
     runs-on: ${{ matrix.os }}
 
