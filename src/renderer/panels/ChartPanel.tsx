@@ -7,6 +7,7 @@ import { useSettings, useUpdateSettings } from '../hooks/use-settings'
 import { ipc } from '../lib/ipc'
 import { formatPercent, formatPrice } from '../lib/format'
 import { cn } from '../lib/cn'
+import { SymbolPicker } from './SymbolPicker'
 
 const TIMEFRAMES: readonly Timeframe[] = ['1h', '4h', '1D', '1W', '1M']
 
@@ -45,10 +46,25 @@ export function ChartPanel(props: IDockviewPanelProps): React.JSX.Element {
     props.api.updateParameters({ ...params, timeframe: next })
   }
 
+  /**
+   * Cambia el activo del panel abierto.
+   *
+   * `updateParameters` y no un panel nuevo: así el usuario conserva su
+   * disposición, y como los parámetros forman parte del layout serializado, el
+   * símbolo elegido sobrevive al reinicio.
+   *
+   * El título se actualiza a la vez porque es lo que se lee en la pestaña; sin
+   * eso, un gráfico de NVDA seguiría anunciándose como «Gráfico · AAPL».
+   */
+  const setSymbol = (next: string): void => {
+    props.api.updateParameters({ ...params, symbol: next })
+    props.api.setTitle(`${t('panels.chart')} · ${next}`)
+  }
+
   return (
     <div className="flex h-full flex-col bg-base">
       <div className="flex shrink-0 items-center gap-3 border-b border-edge px-3 py-2">
-        <span className="text-sm font-medium text-content">{symbol}</span>
+        <SymbolPicker symbol={symbol} onSelect={setSymbol} />
 
         {quote && (
           <>

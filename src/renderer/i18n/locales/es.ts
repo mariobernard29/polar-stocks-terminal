@@ -158,6 +158,10 @@ export const es = {
     phase4: 'Fase 4',
   },
   panels: {
+    changeSymbol: 'Cambiar activo',
+    searchSymbol: 'Buscar acción, índice o cripto…',
+    searchHint: 'Escribe un nombre o un símbolo. También vale un índice como ^GSPC.',
+    useTyped: 'Sin resultados. Pulsa Intro para usar {{symbol}} igualmente.',
     chart: 'Gráfico',
     watchlist: 'Lista de seguimiento',
     news: 'Noticias',

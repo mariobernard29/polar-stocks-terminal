@@ -158,6 +158,10 @@ export const en: TranslationShape = {
     phase4: 'Phase 4',
   },
   panels: {
+    changeSymbol: 'Change asset',
+    searchSymbol: 'Search stock, index or crypto…',
+    searchHint: 'Type a name or a symbol. An index like ^GSPC works too.',
+    useTyped: 'No results. Press Enter to use {{symbol}} anyway.',
     chart: 'Chart',
     watchlist: 'Watchlist',
     news: 'News',
