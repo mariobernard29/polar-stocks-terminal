@@ -51,6 +51,9 @@ jobs:
           node-version: 24
           cache: npm
 
+      # `npm ci` dispara el `postinstall`, que genera el cliente de Prisma en
+      # `src/main/db/generated`. Ese directorio no se versiona —es código
+      # generado— y sin él el typecheck del build no encuentra sus tipos.
       - run: npm ci
 
       # Las comprobaciones se repiten aquí a propósito: una versión publicada
